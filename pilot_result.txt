@@ -1,0 +1,13 @@
+k=  8 gen_size=7793 sampled=600 infeas=129 feas=0 timeout=471 kill=21.5% t_med=3.89s t_mean=3.29s
+    expanded 471 timeouts -> 93631 children (branch=198.8); est full next gen ~1216110
+k= 10 gen_size=93631 sampled=600 infeas=398 feas=0 timeout=202 kill=66.3% t_med=0.74s t_mean=1.75s
+    expanded 202 timeouts -> 38296 children (branch=189.6); est full next gen ~5976154
+k= 12 gen_size=38296 sampled=600 infeas=533 feas=0 timeout=67 kill=88.8% t_med=0.54s t_mean=0.94s
+    expanded 67 timeouts -> 779 children (branch=11.6); est full next gen ~49720
+k= 14 gen_size=779 sampled=600 infeas=469 feas=0 timeout=131 kill=78.2% t_med=0.66s t_mean=1.38s
+    expanded 131 timeouts -> 1848 children (branch=14.1); est full next gen ~2399
+k= 16 gen_size=1848 sampled=600 infeas=206 feas=0 timeout=394 kill=34.3% t_med=3.78s t_mean=3.13s
+    expanded 394 timeouts -> 65958 children (branch=167.4); est full next gen ~203150
+k= 18 gen_size=65958 sampled=600 infeas=586 feas=0 timeout=14 kill=97.7% t_med=0.85s t_mean=0.94s
+    expanded 14 timeouts -> 103 children (branch=7.4); est full next gen ~11322
+PILOT_ALLDONE

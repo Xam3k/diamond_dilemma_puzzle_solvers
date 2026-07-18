@@ -1,0 +1,3 @@
+# WHITE FIX LIST (all 160 tiles checked). Fix these in verify_white_bits.txt
+# and verify_white_arcs.txt. Points 1..11 clockwise: B r->l, L b->t, R t->b.
+

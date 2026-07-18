@@ -1,0 +1,188 @@
+# Diamond Dilemma internal-connection (wiring) verification file
+# Same conventions as the bits files (B/L/R, points 1..11 clockwise).
+# 'B3-L5' = the line at bottom point 3 connects inside the tile to left point 5.
+# Lines starting 'N:' = our single current belief.
+# Lines with 'A)' and 'B)' = two plausible options - please write which is right
+#   (or a different pairing if both are wrong).
+# GOLD line connections (from geometry + Jaap's tile drawings).
+
+  1: B3-R7, B7-L7, L11-R4
+  2: B10-L2, B3-R11, B9-R4
+  3: B8-R9, L7-R6
+  4: B3-R9, L11-R3
+  5: B7-L1, L6-R1
+  6: B2-L4, L10-R8
+  7: B10-R7, L10-R3
+  8: B11-L3, B3-R11, L8-R9
+
+  9: B1-R2, L1-L6
+ 10: B8-L10
+ 11: L2-R9, L4-R6
+ 12: B1-B3, B9-L1, L11-R5
+ 13: B1-R7, B7-L1, L8-R1
+ 14: B6-R9, B7-L2, L4-R3
+ 15: B10-L4, B6-R10, L8-R4
+ 16: B6-L2, L5-L11
+
+ 17: B10-L3, B3-L6
+ 18: B2-R9, L4-R3, L5-R2
+ 19: B7-R11, B8-R5, L5-R2
+ 20: B1-R2, B11-L4
+ 21: B5-B8, L9-R8
+ 22: B10-L3, B7-R11, L6-R8
+ 23: B7-R5, B9-L3, L8-R3
+ 24: B8-R11, B9-R7, L11-R4
+
+ 25: B1-R2, B10-L3, B7-L9
+ 26: B1-R4, B5-R1, B8-L2
+ 27: B10-L1, L3-R3
+ 28: B3-L7
+ 29: B1-L10, B11-L3
+ 30: B5-B6, L8-L11
+ 31: B4-R5, B6-R2
+ 32: B1-R5, B3-L8, B9-L6
+
+ 33: B11-L9, R6-R9
+ 34: B3-L3, L9-R10
+ 35: B1-R4, B7-B10, L3-R1
+ 36: B2-L1, L2-R4
+ 37: B10-L8
+ 38: B10-L6, L7-R7
+ 39: B2-R11, B8-R5, L6-R2
+ 40: B4-R9, L11-R3
+
+ 41: B5-L1, L7-L10
+ 42: B11-R2, L9-R1
+ 43: B4-R11, B8-L3, L11-R7
+ 44: B2-R10, B6-R8
+ 45: B3-R7, B4-R6, L2-R1
+ 46: B11-L7, B4-R4, L11-R3
+ 47: B10-L3, B6-L5
+ 48: B3-R11, L4-L7, R6-R7
+
+ 49: B11-L10, B5-L11
+ 50: B1-L5, L10-R10
+ 51: B3-R3, L8-L10, R9-R10
+ 52: B10-R4, L9-R2
+ 53: B10-L11, R5-R11
+ 54: B11-L7, B9-R1
+ 55: B1-R2, B2-L5
+ 56: B5-R9, B8-L5, L7-R1
+
+ 57: B2-R5, B9-L8, L10-R1
+ 58: B6-L3, L7-R4
+ 59: B4-R11, L10-R3, L4-R6
+ 60: B11-L1, B6-R3
+ 61: B1-R7, B3-L4, B9-L2
+ 62: B8-L6, L8-R11
+ 63: B10-R10, B11-L1, L5-R5
+ 64: B1-R3, B5-L7
+
+ 65: B4-R9, B6-L6, L10-R3
+ 66: B2-L5
+ 67: B10-R8, B11-R4
+ 68: L2-R9, L9-R1
+ 69: B5-R9, L5-R6
+ 70: B1-L9, B7-L3, L11-R7
+ 71: B7-R9, B9-L8, L10-R6
+ 72: B5-R6, L2-L6, L9-R2
+
+ 73: B4-R7, B9-L10
+ 74: B11-R4, B3-R5
+ 75: B8-B9, R3-R5
+ 76: B5-R5, L7-R2
+ 77: B1-R11, B9-L4, L7-R10
+ 78: B11-L2, B3-R11, L7-R4
+ 79: B8-L11, L3-L9
+ 80: B7-L9, B11-L1 
+
+ 81: B2-R10, L2-L10
+ 82: L3-L9, R3-R8
+ 83: B3-R8, B4-L1, L8-R4
+ 84: B2-R2, B5-B11
+ 85: B3-R9, B6-L3, L7-R4
+ 86: B2-R4, L2-R3
+ 87: B10-L7, B6-R10, L10-R9
+ 88: B2-R1, B8-L2
+
+ 89: B9-L2, L6-R10
+ 90: R5-R10
+ 91: B2-B7, R4-R9
+ 92: B9-R9, L11-R2, L7-R3
+ 93: B10-R11
+ 94: B5-L5, L9-R1
+ 95: B10-L6, B3-B6, R1-R5
+ 96: B9-L11, R5-R11
+
+ 97: B8-R1
+ 98: L1-R10, L6-R6, L9-R3
+ 99: B1-B9, R3-R9
+100: B2-R1, B6-L3
+101: B11-L1, L11-R2
+102: B6-L8, L9-R7
+103: B8-L2, L5-R2
+104: B5-R11, B9-R6
+
+105: L7-R11
+106: B3-L6, B9-L4
+107: L6-R11, L9-R2
+108: B1-R11, B8-L7, R5-R6
+109: B4-R1, B7-L6
+110: B9-L6, L8-R5
+111: B11-L11, B4-R4
+112: B10-R9
+
+113: B5-R7, B8-L5, L11-R3
+114: L1-R10, L9-R6
+115: B3-L9, B8-L2
+116: B11-L11, B3-R9, B6-R8
+117: B8-L3, R1-R3
+118: B3-B9, L1-L8
+119: B3-R9, B5-L4, L5-R8
+120: B7-L4
+
+121: B5-R2, L4-R1
+122: B1-R6, B10-R1
+123: L11-R2, L4-R6
+124: B4-L3, L11-R1
+125: B3-R11, B9-L5, L9-R10
+126: B8-L4
+127: B2-R9, B7-L6, R2-R6
+128: B1-R5, B6-L7, B9-L1
+
+129: B3-L9, B6-L3, L11-R11
+130: B5-L3, L4-R1
+131: B3-B9, L3-L6
+132: B1-L11, B2-L3
+133: B5-R9, B6-L6, L10-R7
+134: B8-B9, L9-R11
+135: B5-R11, B9-L4, L9-R10
+136: B6-L3, L6-R9
+
+137: B1-R1, B4-L5
+138: B4-R7, B8-L6
+139: B1-R8, B5-L5, L9-R4
+140: B5-R3, L10-R2
+141: B7-B8, R10-R11
+142: B7-L2, L10-R7
+143: B3-R2, B9-L8, L11-R1
+144: B4-R10, L4-R8
+
+145: B1-R5, B10-L2, B7-L4
+146: B1-R4, L7-R3
+147: B8-R6, L10-R2
+148: B9-R9, L1-R1
+149: B7-R8, L5-R7
+150: B11-L1, B3-R3
+151: B1-B5, B6-L10
+152: B9-L1, L4-R10
+
+153: B3-R7, L7-R5
+154: B9-R9, L11-R1, L5-R3
+155: B3-B9, R1-R8
+156: B5-R11, B8-L5
+157: B1-B2, L2-R3
+158: B10-L6, B7-R9, L11-R7
+159: B6-R10, L11-R3, L3-L9
+160: B2-R11, B8-L1, L7-R8
+

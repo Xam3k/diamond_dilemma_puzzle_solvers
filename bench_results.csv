@@ -1,0 +1,7 @@
+binary,seed,order,nodes,secs,nps,max_depth,sols,cycles_pruned,d40_refutes,instance,node_budget,timestamp
+solver2.exe,1,none,300000000,18.091,16666667.0,18,0,,0,instance_gold.txt,300000000,2026-07-10 14:59:25
+solver2.exe,2,none,300000000,21.044,14285714.0,79,0,,0,instance_gold.txt,300000000,2026-07-10 14:59:46
+solver2.exe,3,none,300000000,20.269,14285714.0,79,0,,0,instance_gold.txt,300000000,2026-07-10 15:00:07
+solver3.exe,1,none,300000000,36.488,8333333.0,18,0,2383390,0,instance_gold.txt,300000000,2026-07-10 15:00:43
+solver3.exe,2,none,300000000,42.206,6976744.0,79,0,5008267,0,instance_gold.txt,300000000,2026-07-10 15:01:26
+solver3.exe,3,none,300000000,34.892,8823529.0,18,0,5741993,0,instance_gold.txt,300000000,2026-07-10 15:02:00

@@ -1,0 +1,14 @@
+Stuck-subtree CP-SAT oracle viability report
+  dumpfile=stuck_all.txt instance=instance_gold.txt per_call_timeout=10.0s probes_run=60
+
+    bucket  n_probes  %INFEAS   %FEAS   %UNK  med_solve_s  saved_nodeeq  cost_nodeeq    verdict
+-----------------------------------------------------------------------------------------------
+     40-59        60   100.0%    0.0%   0.0%        0.088      39920074       665973 ORACLE PAYS
+     60-79         0       --      --     --           --            --           --    NO DATA
+     80-99         0       --      --     --           --            --           --    NO DATA
+   100-120         0       --      --     --           --            --           --    NO DATA
+
+NODES_PER_SEC assumed = 7,600,000 (raw DFS throughput)
+saved_nodeeq  = %INFEASIBLE * median_subtree_nodes  (nodes the DFS would have chewed through before failing this subtree, now skipped in one call)
+cost_nodeeq   = median_solve_seconds * NODES_PER_SEC  (the DFS-node-equivalent budget spent on the CP-SAT call itself)
+Verdict: ORACLE PAYS if saved > 3x cost, MARGINAL if saved > cost, else LOSES.

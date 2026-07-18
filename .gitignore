@@ -1,0 +1,54 @@
+# run artifacts / scratch (regenerable)
+*.log
+*.exe
+solver3_linux
+oracle_*/
+oracle_u*_solver.log
+oracle_u*_sidecar.log
+fr_u*.txt
+frontier_u*.txt
+defer_*.txt
+job_*.log
+unit_*.log
+req_*.txt
+ans_*.txt
+nohup.out
+__pycache__/
+*.pyc
+
+# bulky intermediate boards / probes (keep the named records only)
+est_prefixes_*.txt
+kick_cycle_start.txt
+kick_cycle_best.txt
+full_from_*.txt
+kicked_208.txt
+instance_loop_*.txt
+solutions3.txt
+best3_partial.txt
+best_edges_190.txt
+edges_best*.txt
+edges_19*_*.txt
+mc_full_best.txt
+mc_partial_best.txt
+tabu_*.txt
+rr_baseline.txt
+rr_ils*.txt
+rr_allholes.txt
+rr_start142.txt
+
+# local toolchain
+toolchain/
+img/
+
+# keep these even though patterns above might match
+!edges_208_checkpoint.txt
+!rr_best.txt
+!est_result.txt
+!frontier_ledger.txt
+*.pdb
+pilot_children_*.txt
+pilot_expand_in.txt
+est_profile.txt
+shallow_meas_result.txt
+checkpoint.txt
+hello.c

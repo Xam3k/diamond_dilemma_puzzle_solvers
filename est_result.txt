@@ -1,0 +1,52 @@
+  ESTIMATE ON: 500000 probes/unit
+  FORCED_PAIRS ON: 7 forced pattern pair(s) found
+EST unit 0 mean_nodes=6.2572e+13 batch_range=[2.06e+11,2.95e+14] max_probe=1.47e+19 avg_death_depth=8.1 deepest=28 full_leaves=0 overflow=0
+EST unit 1 mean_nodes=3.3179e+14 batch_range=[1.37e+13,2.39e+15] max_probe=1.19e+20 avg_death_depth=8.1 deepest=28 full_leaves=0 overflow=0
+EST unit 2 mean_nodes=6.7111e+14 batch_range=[5.25e+12,6.38e+15] max_probe=3.15e+20 avg_death_depth=8.2 deepest=30 full_leaves=0 overflow=0
+EST unit 3 mean_nodes=5.4133e+14 batch_range=[7.14e+11,5.02e+15] max_probe=2.51e+20 avg_death_depth=7.8 deepest=26 full_leaves=0 overflow=0
+EST unit 4 mean_nodes=1.1173e+16 batch_range=[9.26e+12,1.11e+17] max_probe=5.52e+21 avg_death_depth=8.2 deepest=34 full_leaves=0 overflow=0
+EST unit 5 mean_nodes=4.4435e+14 batch_range=[6.60e+12,2.42e+15] max_probe=1.19e+20 avg_death_depth=8.7 deepest=30 full_leaves=0 overflow=0
+EST unit 6 mean_nodes=1.3390e+13 batch_range=[4.18e+11,6.73e+13] max_probe=2.83e+18 avg_death_depth=8.0 deepest=28 full_leaves=0 overflow=0
+EST unit 7 mean_nodes=6.2432e+14 batch_range=[3.66e+13,3.57e+15] max_probe=1.77e+20 avg_death_depth=7.8 deepest=28 full_leaves=0 overflow=0
+EST unit 8 mean_nodes=6.1910e+13 batch_range=[5.82e+12,3.46e+14] max_probe=1.58e+19 avg_death_depth=8.2 deepest=30 full_leaves=0 overflow=0
+EST unit 9 mean_nodes=4.9465e+14 batch_range=[3.01e+12,4.23e+15] max_probe=1.17e+20 avg_death_depth=8.1 deepest=34 full_leaves=0 overflow=0
+EST unit 10 mean_nodes=6.4184e+15 batch_range=[1.58e+13,5.64e+16] max_probe=2.82e+21 avg_death_depth=7.8 deepest=30 full_leaves=0 overflow=0
+EST unit 11 mean_nodes=4.5510e+14 batch_range=[2.25e+13,1.64e+15] max_probe=7.73e+19 avg_death_depth=8.2 deepest=30 full_leaves=0 overflow=0
+EST unit 12 mean_nodes=3.4034e+13 batch_range=[3.37e+12,2.11e+14] max_probe=1.03e+19 avg_death_depth=7.7 deepest=28 full_leaves=0 overflow=0
+EST unit 13 mean_nodes=2.1223e+15 batch_range=[2.95e+12,1.18e+16] max_probe=5.89e+20 avg_death_depth=8.8 deepest=30 full_leaves=0 overflow=0
+EST unit 14 mean_nodes=3.7771e+11 batch_range=[9.40e+09,1.51e+12] max_probe=3.83e+16 avg_death_depth=7.0 deepest=26 full_leaves=0 overflow=0
+EST unit 15 mean_nodes=1.7367e+12 batch_range=[1.80e+11,1.07e+13] max_probe=3.71e+17 avg_death_depth=7.1 deepest=26 full_leaves=0 overflow=0
+EST unit 16 mean_nodes=8.6110e+13 batch_range=[1.79e+12,4.32e+14] max_probe=2.10e+19 avg_death_depth=7.5 deepest=31 full_leaves=0 overflow=0
+EST unit 17 mean_nodes=9.1572e+11 batch_range=[1.52e+11,2.55e+12] max_probe=1.24e+17 avg_death_depth=7.9 deepest=23 full_leaves=0 overflow=0
+EST unit 18 mean_nodes=3.0375e+12 batch_range=[2.61e+11,8.60e+12] max_probe=3.36e+17 avg_death_depth=7.1 deepest=29 full_leaves=0 overflow=0
+EST unit 19 mean_nodes=7.3826e+12 batch_range=[3.23e+11,3.51e+13] max_probe=1.64e+18 avg_death_depth=7.5 deepest=28 full_leaves=0 overflow=0
+EST unit 20 mean_nodes=1.5677e+14 batch_range=[1.85e+13,5.67e+14] max_probe=2.45e+19 avg_death_depth=8.1 deepest=30 full_leaves=0 overflow=0
+EST unit 21 mean_nodes=4.2116e+13 batch_range=[3.87e+12,2.47e+14] max_probe=1.20e+19 avg_death_depth=8.1 deepest=26 full_leaves=0 overflow=0
+EST unit 22 mean_nodes=8.6852e+13 batch_range=[5.69e+12,5.26e+14] max_probe=2.52e+19 avg_death_depth=8.3 deepest=30 full_leaves=0 overflow=0
+EST unit 23 mean_nodes=7.5362e+11 batch_range=[4.99e+10,3.45e+12] max_probe=1.57e+17 avg_death_depth=8.1 deepest=26 full_leaves=0 overflow=0
+EST unit 24 mean_nodes=3.3094e+12 batch_range=[3.59e+11,2.07e+13] max_probe=5.92e+17 avg_death_depth=8.0 deepest=26 full_leaves=0 overflow=0
+EST unit 25 mean_nodes=2.5043e+12 batch_range=[1.40e+11,1.51e+13] max_probe=7.53e+17 avg_death_depth=8.1 deepest=26 full_leaves=0 overflow=0
+EST unit 26 mean_nodes=2.3893e+14 batch_range=[3.82e+12,1.56e+15] max_probe=7.49e+19 avg_death_depth=8.1 deepest=28 full_leaves=0 overflow=0
+EST unit 27 mean_nodes=1.8380e+14 batch_range=[2.57e+13,9.47e+14] max_probe=4.24e+19 avg_death_depth=8.1 deepest=28 full_leaves=0 overflow=0
+EST unit 28 mean_nodes=2.4321e+14 batch_range=[1.54e+12,1.44e+15] max_probe=7.21e+19 avg_death_depth=8.2 deepest=30 full_leaves=0 overflow=0
+EST unit 29 mean_nodes=3.6078e+14 batch_range=[8.81e+12,2.36e+15] max_probe=1.05e+20 avg_death_depth=8.1 deepest=28 full_leaves=0 overflow=0
+EST unit 30 mean_nodes=2.8195e+15 batch_range=[1.69e+12,2.79e+16] max_probe=1.39e+21 avg_death_depth=7.9 deepest=30 full_leaves=0 overflow=0
+EST unit 31 mean_nodes=6.0133e+12 batch_range=[1.47e+12,2.40e+13] max_probe=5.86e+17 avg_death_depth=7.2 deepest=26 full_leaves=0 overflow=0
+EST unit 32 mean_nodes=5.1347e+13 batch_range=[4.62e+11,3.53e+14] max_probe=1.72e+19 avg_death_depth=8.1 deepest=28 full_leaves=0 overflow=0
+EST unit 33 mean_nodes=7.8047e+13 batch_range=[1.26e+12,5.70e+14] max_probe=2.80e+19 avg_death_depth=7.9 deepest=30 full_leaves=0 overflow=0
+EST unit 34 mean_nodes=1.5131e+13 batch_range=[7.59e+11,8.66e+13] max_probe=4.15e+18 avg_death_depth=8.7 deepest=26 full_leaves=0 overflow=0
+EST unit 35 mean_nodes=1.3274e+13 batch_range=[1.81e+12,4.43e+13] max_probe=1.54e+18 avg_death_depth=9.0 deepest=30 full_leaves=0 overflow=0
+EST unit 36 mean_nodes=3.6147e+13 batch_range=[1.46e+12,1.47e+14] max_probe=6.07e+18 avg_death_depth=7.9 deepest=30 full_leaves=0 overflow=0
+EST unit 37 mean_nodes=1.2582e+14 batch_range=[6.46e+12,9.42e+14] max_probe=4.69e+19 avg_death_depth=8.8 deepest=31 full_leaves=0 overflow=0
+EST unit 38 mean_nodes=1.8698e+13 batch_range=[6.11e+11,1.34e+14] max_probe=6.04e+18 avg_death_depth=8.9 deepest=30 full_leaves=0 overflow=0
+EST unit 39 mean_nodes=1.9262e+14 batch_range=[7.62e+11,1.44e+15] max_probe=7.11e+19 avg_death_depth=7.2 deepest=28 full_leaves=0 overflow=0
+EST unit 40 mean_nodes=5.2182e+18 batch_range=[1.83e+12,5.22e+19] max_probe=2.61e+24 avg_death_depth=8.2 deepest=30 full_leaves=0 overflow=0
+EST unit 41 mean_nodes=3.5458e+13 batch_range=[1.94e+12,1.51e+14] max_probe=7.18e+18 avg_death_depth=7.9 deepest=28 full_leaves=0 overflow=0
+EST unit 42 mean_nodes=2.9132e+12 batch_range=[4.12e+11,9.78e+12] max_probe=4.78e+17 avg_death_depth=7.2 deepest=26 full_leaves=0 overflow=0
+EST unit 43 mean_nodes=2.2423e+14 batch_range=[9.11e+12,9.16e+14] max_probe=3.87e+19 avg_death_depth=8.2 deepest=30 full_leaves=0 overflow=0
+EST unit 44 mean_nodes=2.3575e+13 batch_range=[1.04e+12,1.64e+14] max_probe=7.98e+18 avg_death_depth=7.9 deepest=28 full_leaves=0 overflow=0
+EST unit 45 mean_nodes=5.4328e+13 batch_range=[2.06e+11,5.02e+14] max_probe=2.49e+19 avg_death_depth=7.2 deepest=28 full_leaves=0 overflow=0
+EST unit 46 mean_nodes=6.1102e+13 batch_range=[2.14e+12,3.72e+14] max_probe=1.39e+19 avg_death_depth=8.1 deepest=29 full_leaves=0 overflow=0
+EST unit 47 mean_nodes=1.3377e+13 batch_range=[3.03e+12,4.47e+13] max_probe=1.72e+18 avg_death_depth=7.9 deepest=28 full_leaves=0 overflow=0
+EST GRAND TOTAL (sum of unit means): 5.2468e+18 nodes
+EST_ALLDONE

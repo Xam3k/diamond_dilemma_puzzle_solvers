@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Diamond Dilemma — record boards</title>
+<style>body{font-family:sans-serif;max-width:1100px;margin:24px auto;padding:0 12px}
+img,object{width:100%;border:1px solid #ccc;margin:8px 0}
+h1{font-size:22px} h2{font-size:17px} p{line-height:1.45}</style></head><body>
+<h1>Diamond Dilemma (1988) — best known results</h1>
+<p>The gold challenge of the Diamond Dilemma puzzle — place all 160 tiles on the
+pentagonal bipyramid so the gold lines form one closed loop — remains unsolved.
+These are the strongest known partial results, produced by the solvers in this
+repository. Tile data and the published silver/red/blue solutions used to
+validate our entire pipeline are due to
+<a href="https://www.jaapsch.net/puzzles/">Jaap Scherphuis</a> — thank you, Jaap.</p>
+<h2>Category A — most tiles with every touching edge matched: 142/160</h2>
+<p>All 240 gold half-edges between placed tiles match perfectly; the 18 hatched
+slots are holes no remaining tile fits (each was proven "dead" — see
+NEGATIVE_RESULTS.md). Robust against 120 perturbation kicks and a 102-slot
+coordinated re-solve.</p>
+<object data="record_A_142.svg" type="image/svg+xml"></object>
+<h2>Category B — most matched edges with all 160 tiles placed: 208/240</h2>
+<p>Eternity-II-style score: every tile is on the board; 32 edges (red) do not
+match. Produced by CP-SAT large-neighbourhood search (rr_edges.py); survived
+~1,600 provably-optimal 52–64-tile rearrangements and ten degrade-reclimb
+restarts without improvement.</p>
+<object data="record_B_208.svg" type="image/svg+xml"></object>
+<p>How everything works: <b>SOLVERS.md</b>. What failed and why:
+<b>NEGATIVE_RESULTS.md</b>.</p>
+</body></html>
