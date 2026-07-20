@@ -1,14 +1,30 @@
 """render_records.py -- render the two record boards as SVGs + a gallery page.
 
-Category A (rr_best.txt): 142/160 perfect partial -- empty slots hatched red.
-Category B (edges_208_checkpoint.txt): 208/240 matched edges on a full board --
-mismatched edges drawn as thick red strokes.
+Two views are produced per record so a reader can either see the abstract
+result or physically verify it against a real puzzle:
 
-Layout identical to gen_viz.py (unfolded bipyramid net: 5 columns, top face Ti
-above / bottom face Bi below the equator).
+  "clean"  -- cream tiles, bold gold lines, mismatched edges (Category B)
+              drawn as thick red strokes.
+  "verify" -- each tile shaded its PHYSICAL colour (silver-grey / red / blue,
+              matching the real puzzle) and labelled with its tile NUMBER
+              (1..160, exactly as numbered in Jaap Scherphuis's gold data),
+              so anyone who owns the puzzle can place each tile by hand and
+              check the result. Gold lines are drawn faintly; empty holes are
+              hatched; Category-B mismatches stay red.
 
-Usage: python render_records.py   -> record_A_142.svg, record_B_208.svg,
-                                     records_view.html
+Tile number -> physical colour mapping (verified: the silver/red/blue
+challenge solvers, which use exactly these index ranges, reproduced Jaap's
+published solution counts):
+  tiles 1..32  silver-grey   (indices 0..31)
+  tiles 33..80 red           (indices 32..79)
+  tiles 81..160 blue         (indices 80..159)
+
+Layout identical to gen_viz.py (unfolded bipyramid net: 5 columns, top face
+Ti above / bottom face Bi below the equator).
+
+Usage: python render_records.py
+Outputs: record_A_142.svg, record_A_142_verify.svg,
+         record_B_208.svg, record_B_208_verify.svg, records_view.html
 """
 import json
 import math
@@ -21,46 +37,31 @@ rev = lambda p: p[::-1]
 W, H = 150.0, 150.0 * math.sqrt(3) / 2
 YEQ = H + 30
 
+# physical tile colour by tile index (see module docstring)
+TILE_FILL = {"silver": "#c9c9c9", "red": "#eda3a3", "blue": "#9cc2e8"}
+def colour_of(t):
+    return "silver" if t < 32 else ("red" if t < 80 else "blue")
+
 def face_anchor(face):
     kind, i = face[0], int(face[1])
     ei = (f"E{i}", (i * W, YEQ))
     ej = (f"E{(i + 1) % 5}", ((i + 1) * W, YEQ))
-    if kind == "T":
-        apex = ("U", (i * W + W / 2, YEQ - H))
-    else:
-        apex = ("D", (i * W + W / 2, YEQ + H))
+    apex = ("U", (i * W + W / 2, YEQ - H)) if kind == "T" else ("D", (i * W + W / 2, YEQ + H))
     return dict([ei, ej, apex])
 
 axisof = {}
 for s in g["slots"]:
     f, ty, b = s["face"], s["type"], tuple(s["bary"])
-    if ty == "up" and sum(b) == 3:
-        anch = face_anchor(f)
-        names = list(anch.keys())
-        # corner slot with bary (3,0,0) etc. identifies which anchor is A/B/C
-        if f not in axisof:
-            axisof[f] = {}
-        for axname, bar in zip(("A", "B", "C"), ((3, 0, 0), (0, 3, 0), (0, 0, 3))):
-            if b == bar:
-                pass
-# The corner-axis mapping above is delicate; reuse gen_viz's approach instead:
-axisof = {}
-for s in g["slots"]:
-    f, ty, b = s["face"], s["type"], tuple(s["bary"])
     if ty != "up" or sorted(b) != [0, 0, 3]:
         continue
-    anch = face_anchor(f)
     corner = s["corners"][b.index(3)]
-    lbl = corner if isinstance(corner, str) else None
-    if lbl is None:
-        continue
-    axisof.setdefault(f, {})[("A", "B", "C")[b.index(3)]] = lbl
-# fill any missing axis letters with remaining anchor labels
-for f, ax in axisof.items():
-    remaining = [k for k in face_anchor(f) if k not in ax.values()]
+    if isinstance(corner, str):
+        axisof.setdefault(f, {})[("A", "B", "C")[b.index(3)]] = corner
+for f in axisof:
+    remaining = [k for k in face_anchor(f) if k not in axisof[f].values()]
     for letter in ("A", "B", "C"):
-        if letter not in ax:
-            ax[letter] = remaining.pop()
+        if letter not in axisof[f]:
+            axisof[f][letter] = remaining.pop()
 
 def slot_corner_pts(s):
     f, ty = s["face"], s["type"]
@@ -68,10 +69,8 @@ def slot_corner_pts(s):
     anch = face_anchor(f)
     ax = axisof[f]
     A, B, C = anch[ax["A"]], anch[ax["B"]], anch[ax["C"]]
-    if ty == "up":
-        cs = [(a + 1, b, c), (a, b + 1, c), (a, b, c + 1)]
-    else:
-        cs = [(a, b + 1, c + 1), (a + 1, b, c + 1), (a + 1, b + 1, c)]
+    cs = ([(a + 1, b, c), (a, b + 1, c), (a, b, c + 1)] if ty == "up"
+          else [(a, b + 1, c + 1), (a + 1, b, c + 1), (a + 1, b + 1, c)])
     return [((x * A[0] + y * B[0] + z * C[0]) / 4,
              (x * A[1] + y * B[1] + z * C[1]) / 4) for (x, y, z) in cs]
 
@@ -95,9 +94,12 @@ def mismatched_edges(pl):
                 out.append((a, ja))
     return out
 
-def render(pl, title, out_f, show_mismatch=False):
+def render(pl, title, out_f, style, show_mismatch=False):
+    """style: 'clean' or 'verify'."""
+    verify = (style == "verify")
     slot_by_idx = {s["idx"]: s for s in g["slots"]}
-    tri_paths, empty_paths, gold_segs, mis_segs, grid = [], [], [], [], []
+    fills = {"silver": [], "red": [], "blue": [], "plain": []}
+    empty_paths, gold_segs, mis_segs, grid, labels = [], [], [], [], []
     for s in g["slots"]:
         pts = slot_corner_pts(s)
         tri = (f"M{fmt(pts[0][0])},{fmt(pts[0][1])}L{fmt(pts[1][0])},{fmt(pts[1][1])}"
@@ -107,10 +109,12 @@ def render(pl, title, out_f, show_mismatch=False):
         if sid not in pl:
             empty_paths.append(tri)
             continue
-        tri_paths.append(tri)
         t, r = pl[sid]
+        fills[colour_of(t) if verify else "plain"].append(tri)
         cx = sum(p[0] for p in pts) / 3
         cy = sum(p[1] for p in pts) / 3
+        if verify:
+            labels.append((cx, cy, t + 1))
         def ep_xy(e, p):
             j = (e - r) % 3
             a, b = pts[j], pts[(j + 1) % 3]
@@ -127,22 +131,31 @@ def render(pl, title, out_f, show_mismatch=False):
             a, b = pts[j], pts[(j + 1) % 3]
             mis_segs.append(f"M{fmt(a[0])},{fmt(a[1])}L{fmt(b[0])},{fmt(b[1])}")
 
-    svg = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="-10 -20 {5*W+20} {2*H+90}" '
+    gold_w = 1.1 if verify else 2.0
+    svg = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="-10 -20 {5*W+20} {2*H+96}" '
            f'font-family="sans-serif">',
-           '<style>.g{fill:none;stroke:#8a7a00;stroke-width:2.0;stroke-linecap:round}'
-           '.grid{fill:none;stroke:#666;stroke-width:.6}'
-           '.mis{fill:none;stroke:#d22;stroke-width:3.4;stroke-linecap:round;opacity:.85}'
+           f'<style>.g{{fill:none;stroke:#8a7a00;stroke-width:{gold_w};stroke-linecap:round;'
+           f'opacity:{0.55 if verify else 1}}}'
+           '.grid{fill:none;stroke:#555;stroke-width:.7}'
+           '.mis{fill:none;stroke:#d22;stroke-width:3.4;stroke-linecap:round;opacity:.9}'
+           '.num{font-size:7.5px;fill:#111;text-anchor:middle;font-weight:bold}'
            '.flb{font-size:13px;fill:#000;text-anchor:middle;font-weight:bold}</style>',
            f'<text x="{2.5*W}" y="-6" class="flb">{title}</text>',
            '<defs><pattern id="hx" width="6" height="6" patternUnits="userSpaceOnUse">'
-           '<path d="M0,6L6,0" stroke="#b33" stroke-width="1.6"/></pattern></defs>',
-           f'<path d="{chr(10).join(tri_paths)}" fill="#f2ead0" stroke="none"/>']
+           '<path d="M0,6L6,0" stroke="#b33" stroke-width="1.6"/></pattern></defs>']
+    if verify:
+        for grp in ("silver", "red", "blue"):
+            svg.append(f'<path d="{chr(10).join(fills[grp])}" fill="{TILE_FILL[grp]}" stroke="none"/>')
+    else:
+        svg.append(f'<path d="{chr(10).join(fills["plain"])}" fill="#f2ead0" stroke="none"/>')
     if empty_paths:
         svg.append(f'<path d="{chr(10).join(empty_paths)}" fill="url(#hx)" stroke="#b33" stroke-width="1"/>')
     svg.append(f'<path class="grid" d="{chr(10).join(grid)}"/>')
     svg.append(f'<path class="g" d="{chr(10).join(gold_segs)}"/>')
     if mis_segs:
         svg.append(f'<path class="mis" d="{chr(10).join(mis_segs)}"/>')
+    for (x, y, num) in labels:
+        svg.append(f'<text x="{fmt(x)}" y="{fmt(y+2.6)}" class="num">{num}</text>')
     for i in range(5):
         svg.append(f'<text x="{fmt(i*W+W/2)}" y="{fmt(YEQ-H-8)}" class="flb">T{i}</text>')
         svg.append(f'<text x="{fmt(i*W+W/2)}" y="{fmt(YEQ+H+16)}" class="flb">B{i}</text>')
@@ -153,37 +166,66 @@ def render(pl, title, out_f, show_mismatch=False):
 A = load("rr_best.txt")
 B = load("edges_208_checkpoint.txt")
 misB = len(mismatched_edges(B))
+
 render(A, f"Category A record: {len(A)}/160 tiles, zero mismatched edges "
-          f"(empty slots hatched)", "record_A_142.svg")
-render(B, f"Category B record: {240-misB}/240 matched edges on a full board "
-          f"({misB} mismatches in red)", "record_B_208.svg", show_mismatch=True)
+          f"(empty slots hatched)", "record_A_142.svg", "clean")
+render(A, f"Category A record: {len(A)}/160 tiles, physical colours + tile numbers "
+          f"(empty slots hatched)", "record_A_142_verify.svg", "verify")
+render(B, f"Category B record: {240-misB}/240 matched edges, full board "
+          f"({misB} mismatches in red)", "record_B_208.svg", "clean", show_mismatch=True)
+render(B, f"Category B record: {240-misB}/240 matched edges, physical colours + tile "
+          f"numbers ({misB} mismatches in red)", "record_B_208_verify.svg", "verify",
+       show_mismatch=True)
 
 html = f"""<!DOCTYPE html>
-<html><head><meta charset="utf-8"><title>Diamond Dilemma — record boards</title>
-<style>body{{font-family:sans-serif;max-width:1100px;margin:24px auto;padding:0 12px}}
-img,object{{width:100%;border:1px solid #ccc;margin:8px 0}}
-h1{{font-size:22px}} h2{{font-size:17px}} p{{line-height:1.45}}</style></head><body>
-<h1>Diamond Dilemma (1988) — best known results</h1>
-<p>The gold challenge of the Diamond Dilemma puzzle — place all 160 tiles on the
-pentagonal bipyramid so the gold lines form one closed loop — remains unsolved.
-These are the strongest known partial results, produced by the solvers in this
-repository. Tile data and the published silver/red/blue solutions used to
-validate our entire pipeline are due to
-<a href="https://www.jaapsch.net/puzzles/">Jaap Scherphuis</a> — thank you, Jaap.</p>
-<h2>Category A — most tiles with every touching edge matched: {len(A)}/160</h2>
-<p>All 240 gold half-edges between placed tiles match perfectly; the 18 hatched
-slots are holes no remaining tile fits (each was proven "dead" — see
+<html><head><meta charset="utf-8"><title>Diamond Dilemma, record boards</title>
+<style>body{{font-family:sans-serif;max-width:1100px;margin:24px auto;padding:0 12px;color:#222}}
+object{{width:100%;border:1px solid #ccc;margin:6px 0;background:#fff}}
+h1{{font-size:22px}} h2{{font-size:17px}} h3{{font-size:14px;color:#555;margin:14px 0 2px}}
+p{{line-height:1.5}} .sw{{display:inline-block;width:12px;height:12px;border:1px solid #999;
+vertical-align:middle;margin:0 3px}}</style></head><body>
+<h1>Diamond Dilemma (1988), best known results</h1>
+<p>The gold challenge of the Diamond Dilemma puzzle, place all 160 tiles on the
+pentagonal bipyramid so the gold lines form one closed loop, remains unsolved.
+Below are the strongest known partial results, produced by the solvers in this
+repository. Each is shown two ways: a clean gold-line view, and a physical
+verification view in which every tile is shaded its real colour
+(<span class="sw" style="background:#c9c9c9"></span>silver-grey tiles 1 to 32,
+<span class="sw" style="background:#eda3a3"></span>red tiles 33 to 80,
+<span class="sw" style="background:#9cc2e8"></span>blue tiles 81 to 160) and
+labelled with its tile number, so anyone who owns the puzzle can lay the tiles
+out by hand and check the result.</p>
+<p>Tile data, the puzzle's history, and the published side-challenge solutions
+used to validate the whole pipeline are due to
+<a href="http://www.jaapsch.net/puzzles/diamdil.htm">Jaap Scherphuis's Diamond
+Dilemma page</a> (and do explore
+<a href="https://www.jaapsch.net/puzzles/">the rest of his puzzle site</a>).
+Thank you, Jaap.</p>
+
+<h2>Category A, most tiles with every touching edge matched: {len(A)}/160</h2>
+<p>All 186 gold half-edges between placed tiles match perfectly; the 18 hatched
+slots are holes that no remaining tile fits (each proven "dead", see
 NEGATIVE_RESULTS.md). Robust against 120 perturbation kicks and a 102-slot
 coordinated re-solve.</p>
-<object data="record_A_142.svg" type="image/svg+xml"></object>
-<h2>Category B — most matched edges with all 160 tiles placed: {240-misB}/240</h2>
+<h3>gold-line view</h3><object data="record_A_142.svg" type="image/svg+xml"></object>
+<h3>physical verification view (tile numbers + colours)</h3>
+<object data="record_A_142_verify.svg" type="image/svg+xml"></object>
+
+<h2>Category B, most matched edges with all 160 tiles placed: {240-misB}/240</h2>
 <p>Eternity-II-style score: every tile is on the board; {misB} edges (red) do not
 match. Produced by CP-SAT large-neighbourhood search (rr_edges.py); survived
-~1,600 provably-optimal 52–64-tile rearrangements and ten degrade-reclimb
-restarts without improvement.</p>
-<object data="record_B_208.svg" type="image/svg+xml"></object>
+about 1,600 provably-optimal 52 to 64-tile rearrangements and ten
+degrade-reclimb restarts without improvement.</p>
+<h3>gold-line view</h3><object data="record_B_208.svg" type="image/svg+xml"></object>
+<h3>physical verification view (tile numbers + colours)</h3>
+<object data="record_B_208_verify.svg" type="image/svg+xml"></object>
+
 <p>How everything works: <b>SOLVERS.md</b>. What failed and why:
-<b>NEGATIVE_RESULTS.md</b>.</p>
+<b>NEGATIVE_RESULTS.md</b>. Re-score any board with
+<code>python score_board.py &lt;board.txt&gt;</code>.</p>
+<p style="color:#888;font-size:12px">Solvers, documentation, and some of the
+code in this project were developed with the assistance of Claude AI models
+(Anthropic).</p>
 </body></html>"""
 open("records_view.html", "w", encoding="utf-8").write(html)
 print("wrote records_view.html")

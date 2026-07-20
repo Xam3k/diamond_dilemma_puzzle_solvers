@@ -1,27 +1,27 @@
-# Diamond Dilemma — solvers, records, and negative results
+# Diamond Dilemma: solvers, records, and negative results
 
 An attempt on the **gold challenge of the Diamond Dilemma** (Alan Fraser-Dackers,
 G J Hayter Ltd, 1988): place 160 triangular tiles on a pentagonal bipyramid
 (10 faces × 16 slots, 240 internal edges) so that the gold lines crossing every
-edge match **and form one single closed loop**. A prize puzzle from 1988 —
-to our knowledge **never solved by anyone**. It still isn't. This repository
-documents how far we got, how, and everything that didn't work, so the next
-attempt can start where we stopped.
+edge match **and form one single closed loop**. A prize puzzle from 1988, 
+to my knowledge **never solved by anyone**. It still isn't. This repository
+documents how far I got, how, and everything that didn't work, so the next
+attempt can start where I stopped.
 
 ## Results
 
 | Category | Best known | File | Visualization |
 |---|---|---|---|
-| **A** — most tiles placed with *every* touching edge matched | **142 / 160** (186/240 edges, zero mismatches) | `rr_best.txt` | `record_A_142.svg` |
-| **B** — most matched edges with *all 160* tiles placed (Eternity-II-style score) | **208 / 240** | `edges_208_checkpoint.txt` | `record_B_208.svg` |
-| Full gold solution (160 tiles + single loop) | **open** | — | — |
+| **A**, most tiles placed with *every* touching edge matched | **142 / 160** (186/240 edges, zero mismatches) | `rr_best.txt` | `record_A_142.svg` |
+| **B**, most matched edges with *all 160* tiles placed (Eternity-II-style score) | **208 / 240** | `edges_208_checkpoint.txt` | `record_B_208.svg` |
+| Full gold solution (160 tiles + single loop) | **open** | n/a | n/a |
 
 Open `records_view.html` for both boards with commentary. Every score is
 re-verifiable in one command: `python score_board.py <board.txt>`.
 
 Supporting measurements worth knowing before you start:
 - The fully-pruned exhaustive search tree is **T ≈ 3×10¹⁶ nodes** (Knuth-probe
-  estimate, validated to 4% on truncated trees) — ~320 core-years at our
+  estimate, validated to 4% on truncated trees) ~320 core-years at my
   3M nodes/s/core. Exhaustion is an institutional-compute project, not a
   desktop one.
 - Category A's 142 sits in a basin where **all 18 holes are provably dead**
@@ -34,7 +34,7 @@ Supporting measurements worth knowing before you start:
 ## Why you can trust the data
 
 The tile digitisation and matching conventions were validated **end-to-end
-against ground truth**: using the same pipeline, we solved the puzzle's three
+against ground truth**: using the same pipeline, I solved the puzzle's three
 published side-challenges (silver / red / blue, white lines) and reproduced
 Jaap Scherphuis's published solution counts **exactly** (2 / 1 / 1), with every
 solution forming the required single white loop. The ~15 digitisation errors
@@ -43,15 +43,15 @@ solutions and corrected after human re-verification of the physical tiles.
 
 ## The two documents to read
 
-- **[SOLVERS.md](SOLVERS.md)** — code-level tour of every solver: the
+- **[SOLVERS.md](SOLVERS.md)**, code-level tour of every solver: the
   exhaustive DFS engine (`solver3.c`) with its seven pruning layers, CP-SAT
   oracle sidecar, crash-resilient work decomposition, and tree-size
   estimator; and the high-score optimizers (`ruin_recreate.py`,
   `rr_edges.py`, `tabu_solver.c`, `cp_maxsat.py`).
-- **[NEGATIVE_RESULTS.md](NEGATIVE_RESULTS.md)** — everything we tried that
+- **[NEGATIVE_RESULTS.md](NEGATIVE_RESULTS.md)**, everything I tried that
   failed, the exact measurement that killed each idea, whether the rejection
   still holds, and the shelf of untried ideas. **Read this before re-trying
-  anything** — and re-run our measurements before trusting them on your
+  anything**  and re-run my measurements before trusting them on your
   hardware.
 
 ## Quick start
@@ -77,6 +77,27 @@ FORCED_PAIRS=1 NEIGHBOR_FC=1 ROOT_UNIT=14 ./solver3.exe instance_gold.txt 0 0
 Python deps: `ortools` (CP-SAT). C engine: any C99 compiler; `solver3_linux`
 is a prebuilt znver4 ELF.
 
+## The tile data (and where the gold vs white lines live)
+
+The physical puzzle has **160 magnetic triangular tiles in three colours**:
+tiles **1 to 32 are silver-grey**, **33 to 80 are red**, **81 to 160 are
+blue** (this index-to-colour mapping is verified: the silver/red/blue
+challenge solvers, which use exactly these ranges, reproduce Jaap's published
+counts). Each tile carries two independent line sets:
+
+- **Gold lines** (the gold challenge, all 160 tiles): raw data in
+  `diamonddilemma.txt` (Jaap's own values, provided by him), parsed into
+  `tiles.json`; within-tile gold wiring in `arcs.json` / `arcs_flat.txt`.
+- **White lines** (the silver / red / blue challenges): `whites.txt`, with
+  within-tile wiring in `white_arcs.json`.
+
+Both are 11 bits per tile-edge (a `1` where a line meets the edge), three
+edges per tile, listed clockwise from the bottom-right edge. The
+`verify_*.txt` files are the human verification sheets used to check every
+tile by eye. `render_records.py` produces a physical-colour, tile-numbered
+view (`records_view.html`) so anyone holding the puzzle can reconstruct a
+board by hand.
+
 ## Repository map
 
 | | |
@@ -90,18 +111,24 @@ is a prebuilt znver4 ELF.
 
 ## Acknowledgments
 
-**[Jaap Scherphuis](https://www.jaapsch.net/puzzles/)** made this project
-possible: the gold tile data, the puzzle's history, and the published
-silver/red/blue solutions we validated our entire pipeline against all come
-from his puzzle pages. Thank you, Jaap.
+**[Jaap Scherphuis](http://www.jaapsch.net/puzzles/diamdil.htm)** made this
+project possible. The gold tile data (which Jaap kindly sent directly), the
+puzzle's history, and the published silver/red/blue solutions I validated the
+whole pipeline against all come from his Diamond Dilemma page. Please also go
+explore [the rest of his puzzle site](https://www.jaapsch.net/puzzles/), it is
+a treasure. Thank you, Jaap.
 
 The heuristic playbook owes a debt to the **Eternity II** solver community,
 whose public write-ups shaped the supply/demand pruning, the tabu baseline,
-and the expectation that matched-edge scores climb with solver quality —
+and the expectation that matched-edge scores climb with solver quality,
 which they did here too, until they didn't (see NEGATIVE_RESULTS.md §5).
+
+Much of the code, the experiment design, and these write-ups were produced
+with the assistance of **Claude AI models (Anthropic)**, working under human
+direction and review.
 
 ## Status
 
 Actively concluded (2026). The gold challenge remains open: 142/160 perfect,
-208/240 with mismatches, full solution unknown — possibly waiting for a
+208/240 with mismatches, full solution unknown, possibly waiting for a
 structural insight, possibly for ~320 core-years, possibly for you.

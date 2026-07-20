@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-10 -20 770.0 349.8076211353316" font-family="sans-serif">
-<style>.g{fill:none;stroke:#8a7a00;stroke-width:2.0;stroke-linecap:round}.grid{fill:none;stroke:#666;stroke-width:.6}.mis{fill:none;stroke:#d22;stroke-width:3.4;stroke-linecap:round;opacity:.85}.flb{font-size:13px;fill:#000;text-anchor:middle;font-weight:bold}</style>
-<text x="375.0" y="-6" class="flb">Category B record: 208/240 matched edges on a full board (32 mismatches in red)</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-10 -20 770.0 355.8076211353316" font-family="sans-serif">
+<style>.g{fill:none;stroke:#8a7a00;stroke-width:2.0;stroke-linecap:round;opacity:1}.grid{fill:none;stroke:#555;stroke-width:.7}.mis{fill:none;stroke:#d22;stroke-width:3.4;stroke-linecap:round;opacity:.9}.num{font-size:7.5px;fill:#111;text-anchor:middle;font-weight:bold}.flb{font-size:13px;fill:#000;text-anchor:middle;font-weight:bold}</style>
+<text x="375.0" y="-6" class="flb">Category B record: 208/240 matched edges, full board (32 mismatches in red)</text>
 <defs><pattern id="hx" width="6" height="6" patternUnits="userSpaceOnUse"><path d="M0,6L6,0" stroke="#b33" stroke-width="1.6"/></pattern></defs>
 <path d="M131.2,127.4L112.5,159.9L150.0,159.9Z
 M93.8,127.4L75.0,159.9L112.5,159.9Z
