@@ -114,7 +114,16 @@ def render(pl, title, out_f, style, show_mismatch=False):
         cx = sum(p[0] for p in pts) / 3
         cy = sum(p[1] for p in pts) / 3
         if verify:
-            labels.append((cx, cy, t + 1))
+            # Rotation cue: a dot on the tile's edge 0 (the "bottom-right" edge
+            # in Jaap's data), which sits on slot edge j0=(-r)%3. The dot's
+            # position (one of the three edges) shows how the tile is turned;
+            # the number stays upright and readable.
+            j0 = (-r) % 3
+            emx = (pts[j0][0] + pts[(j0 + 1) % 3][0]) / 2
+            emy = (pts[j0][1] + pts[(j0 + 1) % 3][1]) / 2
+            dotx = emx * 0.8 + cx * 0.2
+            doty = emy * 0.8 + cy * 0.2
+            labels.append((cx, cy, t + 1, dotx, doty))
         def ep_xy(e, p):
             j = (e - r) % 3
             a, b = pts[j], pts[(j + 1) % 3]
@@ -138,7 +147,9 @@ def render(pl, title, out_f, style, show_mismatch=False):
            f'opacity:{0.55 if verify else 1}}}'
            '.grid{fill:none;stroke:#555;stroke-width:.7}'
            '.mis{fill:none;stroke:#d22;stroke-width:3.4;stroke-linecap:round;opacity:.9}'
-           '.num{font-size:7.5px;fill:#111;text-anchor:middle;font-weight:bold}'
+           '.num{font-size:8px;fill:#111;text-anchor:middle;font-weight:bold}'
+           '.ul{stroke:#111;stroke-width:1.0}'
+           '.rdot{fill:#7a1020;stroke:none}'
            '.flb{font-size:13px;fill:#000;text-anchor:middle;font-weight:bold}</style>',
            f'<text x="{2.5*W}" y="-6" class="flb">{title}</text>',
            '<defs><pattern id="hx" width="6" height="6" patternUnits="userSpaceOnUse">'
@@ -154,8 +165,12 @@ def render(pl, title, out_f, style, show_mismatch=False):
     svg.append(f'<path class="g" d="{chr(10).join(gold_segs)}"/>')
     if mis_segs:
         svg.append(f'<path class="mis" d="{chr(10).join(mis_segs)}"/>')
-    for (x, y, num) in labels:
-        svg.append(f'<text x="{fmt(x)}" y="{fmt(y+2.6)}" class="num">{num}</text>')
+    for (x, y, num, dotx, doty) in labels:
+        uw = 2.3 * len(str(num))
+        svg.append(f'<circle cx="{fmt(dotx)}" cy="{fmt(doty)}" r="2.1" class="rdot"/>'
+                   f'<text x="{fmt(x)}" y="{fmt(y+1.6)}" class="num">{num}</text>'
+                   f'<line x1="{fmt(x-uw)}" y1="{fmt(y+3.3)}" x2="{fmt(x+uw)}" y2="{fmt(y+3.3)}" '
+                   f'class="ul"/>')
     for i in range(5):
         svg.append(f'<text x="{fmt(i*W+W/2)}" y="{fmt(YEQ-H-8)}" class="flb">T{i}</text>')
         svg.append(f'<text x="{fmt(i*W+W/2)}" y="{fmt(YEQ+H+16)}" class="flb">B{i}</text>')
@@ -194,7 +209,11 @@ verification view in which every tile is shaded its real colour
 <span class="sw" style="background:#eda3a3"></span>red tiles 33 to 80,
 <span class="sw" style="background:#9cc2e8"></span>blue tiles 81 to 160) and
 labelled with its tile number, so anyone who owns the puzzle can lay the tiles
-out by hand and check the result.</p>
+out by hand and check the result. Every number is <b>underlined</b> (the line
+marks its base, so 6 and 9 are never confused), and a small
+<span style="color:#7a1020;font-weight:bold">dark-red dot</span> sits on each
+tile's <b>bottom-right edge (edge 0 in Jaap's data), showing how the tile is
+rotated</b>. The faint gold lines confirm the exact orientation.</p>
 <p>Tile data, the puzzle's history, and the published side-challenge solutions
 used to validate the whole pipeline are due to
 <a href="http://www.jaapsch.net/puzzles/diamdil.htm">Jaap Scherphuis's Diamond
