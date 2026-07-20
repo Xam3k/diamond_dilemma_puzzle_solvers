@@ -98,6 +98,13 @@ tile by eye. `render_records.py` produces a physical-colour, tile-numbered
 view (`records_view.html`) so anyone holding the puzzle can reconstruct a
 board by hand.
 
+For a direct integrity check, `render_tiles_sheet.py` draws **all 160 tiles in
+Jaap's exact sheet order** (8 per row, silver then red then blue) as
+`tiles_view.html`, one image for the gold lines and one for the white lines.
+Place it next to Jaap's original sheets and compare tile by tile. Every drawn
+line is verified to correspond exactly to an encoded data bit (checked for all
+160 tiles, both colours).
+
 ## Repository map
 
 | | |
@@ -106,7 +113,7 @@ board by hand.
 | Exhaustive engine | `solver3.c`, `oracle_sidecar.py`, `run_hybrid.py`, `frontier_ledger.py`, `ledger_run.py` |
 | High-score solvers | `rr_edges.py` (B champion), `ruin_recreate.py` (A champion), `tabu_solver.c`, `cp_maxsat.py`, `kick_cycle.sh` |
 | Verification & analysis | `score_board.py`, `analyze_partial.py`, `check_verified.py`, `check_white_full.py`, `loop_trace.py`, white-challenge solvers `cp_white_*.py`, min-edit fitters `*_edit.py` |
-| Visualization | `gen_viz.py`, `render_records.py`, `records_view.html`, `solutions_view.html` (silver/red/blue gallery) |
+| Visualization | `gen_viz.py`, `render_records.py`, `records_view.html`, `render_tiles_sheet.py`, `tiles_view.html` (all-160 tile catalog), `solutions_view.html` (silver/red/blue gallery) |
 | Records & artifacts | `rr_best.txt`, `edges_208_checkpoint.txt`, `est_result.txt` (tree-size estimate), `frontier_ledger.txt` (banked exhaustive coverage) |
 
 ## Acknowledgments

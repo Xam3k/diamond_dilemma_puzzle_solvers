@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Diamond Dilemma, tile catalog</title>
+<style>body{font-family:sans-serif;max-width:900px;margin:24px auto;padding:0 12px;color:#222}
+object{width:100%;border:1px solid #ccc;margin:6px 0;background:#fff}
+h1{font-size:21px} h2{font-size:16px} p{line-height:1.5}</style></head><body>
+<h1>Diamond Dilemma, all 160 tiles (digitised)</h1>
+<p>These are the 160 tiles exactly as encoded in this repository, drawn in the
+same order and arrangement as
+<a href="http://www.jaapsch.net/puzzles/diamdil.htm">Jaap Scherphuis's</a>
+original tile sheets: 8 per row, grouped silver (1 to 32), red (33 to 80),
+blue (81 to 160). Put this next to Jaap's sheets and compare tile by tile to
+confirm the digitisation is faithful. Each tile is an up-triangle with edge 0
+along the bottom (read right to left), edge 1 up the left side, edge 2 down
+the right side, which is the convention the data was read with.</p>
+<h2>Gold lines (the gold challenge)</h2>
+<p>Source data: <code>diamonddilemma.txt</code> (Jaap's own values) to
+<code>tiles.json</code>, with within-tile wiring in <code>arcs.json</code>.</p>
+<object data="tiles_sheet_gold.svg" type="image/svg+xml"></object>
+<h2>White lines (the silver / red / blue challenges)</h2>
+<p>Source data: <code>whites.txt</code>, wiring in <code>white_arcs.json</code>.
+Drawn white with a grey halo for visibility.</p>
+<object data="tiles_sheet_white.svg" type="image/svg+xml"></object>
+<p style="color:#888;font-size:12px">Rendered by render_tiles_sheet.py.
+Some of the code and documentation in this project was produced with the
+assistance of Claude AI models (Anthropic), under human direction and review.</p>
+</body></html>
