@@ -1,6 +1,6 @@
 #!/bin/bash
 # Round 2: targeted + path-relinking + cross-basin, all via CP-SAT exact repair.
-cd /c/Users/xavie/coding/diamond-dilemma
+cd "$(dirname "$0")"
 WALL=${1:-5400}
 # 1 & 2: TARGETED bottom-pyramid repair (bottleneck = B faces) from the 142 record
 RR_OUT=r2_bot.txt   RR_SEED=11 RR_WORKERS=2 RR_BIG=0.5 RR_FOCUS=B0,B1,B2,B3,B4 python ruin_recreate.py rr_best.txt $WALL 50 > r2_bot.log 2>&1 &

@@ -1,5 +1,5 @@
 #!/bin/bash
-cd /c/Users/xavie/coding/diamond-dilemma
+cd "$(dirname "$0")"
 rm -rf oracle_dir; pkill -f oracle_sidecar 2>/dev/null
 FORCED_PAIRS=0 timeout 700 python run_hybrid.py instance_gold.txt 0 5 4000000 600 >/dev/null 2>&1
 cp hybrid_solver.log fp_off.log

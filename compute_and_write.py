@@ -20,7 +20,7 @@ def parse_tiles(path):
                 tiles.append(tuple(toks))
     return tiles
 
-TILES = parse_tiles(r'C:\Users\xavie\coding\diamond-dilemma\diamonddilemma.txt')
+TILES = parse_tiles(r'diamonddilemma.txt')
 assert len(TILES) == 160, f"Got {len(TILES)} tiles"
 
 ALL_EDGES = [(t, ei, pat) for t, tile in enumerate(TILES) for ei, pat in enumerate(tile)]
@@ -210,7 +210,7 @@ analysis = {
     },
 }
 
-with open(r'C:\Users\xavie\coding\diamond-dilemma\analysis.json','w') as f:
+with open(r'analysis.json','w') as f:
     json.dump(analysis, f, indent=2)
 print("Wrote analysis.json")
 
@@ -419,7 +419,7 @@ A(
 )
 A("")
 
-with open(r'C:\Users\xavie\coding\diamond-dilemma\ANALYSIS.md','w') as f:
+with open(r'ANALYSIS.md','w') as f:
     f.write('\n'.join(lines))
 print("Wrote ANALYSIS.md")
 print("DONE.")

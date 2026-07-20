@@ -1,5 +1,5 @@
 #!/bin/bash
-cd /c/Users/xavie/coding/diamond-dilemma
+cd "$(dirname "$0")"
 for seed in 8 9; do
   rm -rf oracle_dir; pkill -f oracle_sidecar 2>/dev/null
   FORCED_PAIRS=0 timeout 700 python run_hybrid.py instance_gold.txt 0 $seed 4000000 600 >/dev/null 2>&1

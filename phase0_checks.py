@@ -11,7 +11,7 @@ def parse(path):
     return tiles
 
 za3k = parse("diamonddilemma.txt")
-doc = parse(r"C:\Users\xavie\Downloads\diamond_dilemma_fable_prompt.md")
+doc = parse(r"diamond_dilemma_prompt.md")
 
 print(f"za3k tiles: {len(za3k)}, doc tiles: {len(doc)}")
 diffs = [i + 1 for i, (a, b) in enumerate(zip(za3k, doc)) if a != b]

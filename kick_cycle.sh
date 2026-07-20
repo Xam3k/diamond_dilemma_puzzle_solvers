@@ -4,7 +4,7 @@
 # LNS for a bounded window, keep any board that BEATS the record (rr_edges
 # only overwrites RE_OUT on improvement over its own start, so we give each
 # cycle a fresh output file and compare afterwards).
-cd /c/Users/xavie/coding/diamond-dilemma || exit 1
+cd "$(dirname "$0")" || exit 1
 CYCLE=0
 while true; do
   CYCLE=$((CYCLE+1))

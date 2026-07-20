@@ -6,7 +6,7 @@ import subprocess
 import sys
 import os
 
-os.chdir(r'C:\Users\xavie\coding\diamond-dilemma')
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 result = subprocess.run([sys.executable, 'analysis.py'], capture_output=True, text=True)
 print(result.stdout)
 if result.stderr:

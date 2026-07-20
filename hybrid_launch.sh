@@ -1,7 +1,7 @@
 #!/bin/bash
 # Hybrid: 4 parallel ruin-recreate instances (2 CP-SAT workers each = 8 cores),
 # seeded from DIVERSE basins + large face-sized exact repair. WALL seconds each.
-cd /c/Users/xavie/coding/diamond-dilemma
+cd "$(dirname "$0")"
 WALL=${1:-5400}
 # 1: champion basin, big-neighborhood escape attempts
 RR_OUT=hyb_champ.txt  RR_SEED=101 RR_WORKERS=2 RR_BIG=0.25 python ruin_recreate.py rr_best.txt        $WALL 40 > hyb_champ.log 2>&1 &
