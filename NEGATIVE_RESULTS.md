@@ -319,7 +319,17 @@ value. Fair game for successors:
 6. **A CP-SAT model tuned for the face-opening hardness bump** (§3.2), the
    one discovery that would revive shallow refutation, which remains the only
    known path to full exhaustion below 10¹⁶ nodes.
-7. **Cloud-scale basin portfolio for Category B**, dozens of parallel
+7. **A loop-feasible high score (probably the best idea here).** Both current
+   records contain 9 closed gold sub-loops ([`count_loops.py`](count_loops.py)), because the
+   optimizers score edge matching and ignore loop structure. A board with a
+   closed sub-loop can never be extended to the single required loop, so
+   neither record is on a solution path. Optimizing "most tiles (or edges)
+   with **zero** closed sub-loops" would be a stricter, far more meaningful
+   metric. Cheapest implementation: reject any repair whose result closes a
+   sub-loop (the check costs milliseconds); the principled version is lazy
+   subtour elimination inside the CP-SAT model (§7.5). Expect lower raw
+   numbers than 142 / 208, but they would actually mean something.
+8. **Cloud-scale basin portfolio for Category B**, dozens of parallel
    [`rr_edges.py`](rr_edges.py) lineages + periodic relinking. The local evidence (each
    basin plateaus individually; fresh basins climb fast) neither proves nor
    refutes that breadth beats depth here; it is the natural next experiment

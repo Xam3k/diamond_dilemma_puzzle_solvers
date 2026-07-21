@@ -30,8 +30,8 @@ instances) and [`archive/`](archive) (spent run artifacts, kept for provenance).
 
 | Category | Best known | File | Visualization |
 |---|---|---|---|
-| **A**, most tiles placed with *every* touching edge matched | **142 / 160** (186/240 edges, zero mismatches) | [`rr_best.txt`](rr_best.txt) | [`record_A_142.svg`](record_A_142.svg) |
-| **B**, most matched edges with *all 160* tiles placed (Eternity-II-style score) | **208 / 240** | [`edges_208_checkpoint.txt`](edges_208_checkpoint.txt) | [`record_B_208.svg`](record_B_208.svg) |
+| **A**, most tiles placed with *every* touching edge matched | **142 / 160** (186/240 edges, zero mismatches) | [`rr_best.txt`](rr_best.txt) | [plain](record_A_142.svg) / [numbered + colours + rotation](record_A_142_verify.svg) |
+| **B**, most matched edges with *all 160* tiles placed (Eternity-II-style score) | **208 / 240** | [`edges_208_checkpoint.txt`](edges_208_checkpoint.txt) | [plain](record_B_208.svg) / [numbered + colours + rotation](record_B_208_verify.svg) |
 | Full gold solution (160 tiles + single loop) | **open** | n/a | n/a |
 
 Open [`records_view.html`](records_view.html) for both boards with commentary. Every score is
@@ -48,6 +48,16 @@ Supporting measurements worth knowing before you start:
 - Category B's 208 survived ~1,600 provably-optimal 52–64-tile
   rearrangements, cross-basin path-relinking, and ten degrade-reclimb
   restarts.
+- **Important caveat: both records contain closed gold sub-loops** (9 in each,
+  measured by [`count_loops.py`](count_loops.py)). The exhaustive engine forbids a loop from
+  closing early, but the optimizers that set these records score edge matching
+  only and ignore loop structure entirely. So each board is strong for the
+  metric it was optimized for, yet is a **structural dead end for the real
+  puzzle**: a closed sub-loop can never become part of the single required
+  loop. A loop-feasible high score, meaning most tiles or edges with *zero*
+  closed sub-loops, would be a stricter and far more meaningful third metric.
+  It is untried, and it is probably the most interesting unexplored direction
+  in this repository.
 
 ## Why you can trust the data
 
