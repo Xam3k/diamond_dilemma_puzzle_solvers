@@ -32,6 +32,7 @@ instances) and [`archive/`](archive) (spent run artifacts, kept for provenance).
 |---|---|---|---|
 | **A**, most tiles placed with *every* touching edge matched | **142 / 160** (186/240 edges, zero mismatches) | [`rr_best.txt`](rr_best.txt) | [plain](record_A_142.svg) / [numbered + colours + rotation](record_A_142_verify.svg) |
 | **B**, most matched edges with *all 160* tiles placed (Eternity-II-style score) | **208 / 240** | [`edges_208_checkpoint.txt`](edges_208_checkpoint.txt) | [plain](record_B_208.svg) / [numbered + colours + rotation](record_B_208_verify.svg) |
+| **C**, most tiles with zero mismatches **and zero closed sub-loops** (the only kind that could still become a solution) | **135 / 160** | [`rr_loopfree.txt`](rr_loopfree.txt) | [plain](record_C_loopfree.svg) / [numbered + colours + rotation](record_C_loopfree_verify.svg) |
 | Full gold solution (160 tiles + single loop) | **open** | n/a | n/a |
 
 Open [`records_view.html`](records_view.html) for both boards with commentary. Every score is
@@ -48,7 +49,7 @@ Supporting measurements worth knowing before you start:
 - Category B's 208 survived ~1,600 provably-optimal 52–64-tile
   rearrangements, cross-basin path-relinking, and ten degrade-reclimb
   restarts.
-- **Important caveat: both records contain closed gold sub-loops** (9 in each,
+- **Category C exists because A and B both contain closed gold sub-loops** (9 in each,
   measured by [`count_loops.py`](count_loops.py)). The exhaustive engine forbids a loop from
   closing early, but the optimizers that set these records score edge matching
   only and ignore loop structure entirely. So each board is strong for the
@@ -56,8 +57,12 @@ Supporting measurements worth knowing before you start:
   puzzle**: a closed sub-loop can never become part of the single required
   loop. A loop-feasible high score, meaning most tiles or edges with *zero*
   closed sub-loops, would be a stricter and far more meaningful third metric.
-  It is untried, and it is probably the most interesting unexplored direction
-  in this repository.
+  That metric is **Category C** above. Its record, 135, came from breaking
+  every loop in the Category-A board, which cost only 7 tiles; the previous
+  loop-feasible best was about 93 (the exhaustive engine's contiguous depth).
+  Whether 136 is reachable is **open**: a global CP-SAT search with lazy
+  subtour cuts ([`loopfree_maxsat.py`](loopfree_maxsat.py)) ran 25 minutes and returned neither a
+  board nor an infeasibility proof.
 
 ## Why you can trust the data
 

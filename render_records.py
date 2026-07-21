@@ -180,6 +180,7 @@ def render(pl, title, out_f, style, show_mismatch=False):
 
 A = load("rr_best.txt")
 B = load("edges_208_checkpoint.txt")
+C = load("rr_loopfree.txt")
 misB = len(mismatched_edges(B))
 
 render(A, f"Category A record: {len(A)}/160 tiles, zero mismatched edges "
@@ -191,6 +192,11 @@ render(B, f"Category B record: {240-misB}/240 matched edges, full board "
 render(B, f"Category B record: {240-misB}/240 matched edges, physical colours + tile "
           f"numbers ({misB} mismatches in red)", "record_B_208_verify.svg", "verify",
        show_mismatch=True)
+
+render(C, f"Category C record: {len(C)}/160 tiles, zero mismatches AND zero closed "
+          f"gold sub-loops (still extendable)", "record_C_loopfree.svg", "clean")
+render(C, f"Category C record: {len(C)}/160 loop-feasible, physical colours + tile "
+          f"numbers", "record_C_loopfree_verify.svg", "verify")
 
 html = f"""<!DOCTYPE html>
 <html><head><meta charset="utf-8"><title>Diamond Dilemma, record boards</title>
@@ -238,6 +244,17 @@ degrade-reclimb restarts without improvement.</p>
 <h3>gold-line view</h3><object data="record_B_208.svg" type="image/svg+xml"></object>
 <h3>physical verification view (tile numbers + colours)</h3>
 <object data="record_B_208_verify.svg" type="image/svg+xml"></object>
+
+<h2>Category C, most tiles with zero mismatches AND zero closed sub-loops: {len(C)}/160</h2>
+<p>The strictest and most meaningful metric: a board that is perfectly matched
+<i>and</i> contains no closed gold sub-loop, so it is still a valid prefix of a
+real solution. Categories A and B both contain 9 closed sub-loops, which makes
+them structural dead ends however high they score. This board was obtained by
+breaking every loop in the Category-A board (7 tiles removed) and is the
+current best; the previous loop-feasible best was about 93 tiles.</p>
+<h3>gold-line view</h3><object data="record_C_loopfree.svg" type="image/svg+xml"></object>
+<h3>physical verification view</h3>
+<object data="record_C_loopfree_verify.svg" type="image/svg+xml"></object>
 
 <p>How everything works: <b>SOLVERS.md</b>. What failed and why:
 <b>NEGATIVE_RESULTS.md</b>. Re-score any board with

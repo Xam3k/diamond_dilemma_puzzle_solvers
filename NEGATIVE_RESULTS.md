@@ -319,6 +319,28 @@ value. Fair game for successors:
 6. **A CP-SAT model tuned for the face-opening hardness bump** (§3.2), the
    one discovery that would revive shallow refutation, which remains the only
    known path to full exhaustion below 10¹⁶ nodes.
+### 5.4 Loop-aware optimization (Category C), what worked and what did not
+
+Implemented after noticing closed sub-loops in the record visualisations.
+- **Naive rejection** (discard any repair that closes a loop): only **3 of 166**
+  repairs survived. Dense packing is precisely what closes loops, so the
+  unconstrained maximizing repair almost always creates one.
+- **Lazy subtour elimination** (forbid the offending tiles' exact arrangement,
+  re-solve; [`ruin_recreate.py`](ruin_recreate.py) `RR_NOLOOP=1`, `RR_MAXCUT`): success rate rose to
+  **42%**, a genuine fix, but each iteration now costs several CP-SAT solves,
+  so throughput collapsed. Two tuned runs managed ~37 repairs with no gain
+  past 135.
+- **Global CP-SAT + lazy cuts** ([`loopfree_maxsat.py`](loopfree_maxsat.py), target >=136): 25 minutes,
+  status UNKNOWN, neither a board nor an infeasibility proof. Same wall the
+  project always hit with global max-placement.
+- **Still open:** is 136 reachable? Note the proof property: a cut only ever
+  forbids an arrangement that provably contains a loop, so it can never remove
+  a loop-free board. Any run that returns INFEASIBLE at a target therefore
+  *proves* the previous value optimal. Nobody has yet made that solve
+  tractable.
+
+---
+
 7. **A loop-feasible high score (probably the best idea here).** Both current
    records contain 9 closed gold sub-loops ([`count_loops.py`](count_loops.py)), because the
    optimizers score edge matching and ignore loop structure. A board with a

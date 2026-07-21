@@ -13,6 +13,7 @@ Usage: python ruin_recreate.py <start_partial> <wall_seconds> [subsolve_seconds]
 Best state continuously saved to rr_best.txt; log to stdout (flushed).
 """
 import json, random, sys, time
+from loops_lib import count_closed, closed_loop_slots
 from collections import defaultdict
 from ortools.sat.python import cp_model
 
@@ -63,6 +64,7 @@ print(f"start: {best_score}/160 from {start_file}", flush=True)
 # the working solution (free a big region, keep only a random FEASIBLE
 # sub-placement so several tiles are evicted), then resume climbing from that
 # worse-but-different state. `best` is preserved throughout.
+NOLOOP = int(os.environ.get("RR_NOLOOP", "0"))   # reject repairs that close a gold sub-loop
 KICK_ON = int(os.environ.get("RR_KICK", "0"))
 KICK_STUCK = int(os.environ.get("RR_KICK_STUCK", "40"))
 KICK_EVICT = int(os.environ.get("RR_KICK_EVICT", "6"))   # tiles to drop on a kick
@@ -213,20 +215,43 @@ while time.time() - t0 < wall and best_score < 160:
     sv.parameters.num_search_workers = WORKERS
     sv.parameters.cp_model_probing_level = 0
     sv.parameters.random_seed = rng.randrange(1 << 30)
-    st = sv.Solve(m)
-    if sv.StatusName(st) not in ("OPTIMAL", "FEASIBLE"):
-        print(f"it{it}: F={nf} status={sv.StatusName(st)} (skip)", flush=True)
+    # Lazy subtour elimination: solve, and if the repair closes a gold loop,
+    # forbid exactly that arrangement of the offending freed slots and re-solve.
+    MAXCUT = int(os.environ.get("RR_MAXCUT", "12"))
+    cand = None
+    cuts = 0
+    for _attempt in range(MAXCUT if NOLOOP else 1):
+        st = sv.Solve(m)
+        if sv.StatusName(st) not in ("OPTIMAL", "FEASIBLE"):
+            break
+        trial = dict(cur)
+        for s_ in Fl:
+            trial.pop(s_, None)
+        for i, s_ in enumerate(Fl):
+            if sv.Value(place[i]):
+                trial[s_] = (avail[sv.Value(tv[i])], sv.Value(rv[i]))
+        if not NOLOOP or count_closed(trial) == 0:
+            cand = trial
+            break
+        bad = closed_loop_slots(trial) & set(Fl)
+        if not bad:
+            break                      # loop lies wholly in the fixed region
+        idx = [fi[s_] for s_ in sorted(bad)]
+        vars_ = []
+        tup = []
+        for i in idx:
+            vars_ += [tv[i], rv[i], place[i]]
+            tup += [sv.Value(tv[i]), sv.Value(rv[i]), sv.Value(place[i])]
+        m.AddForbiddenAssignments(vars_, [tuple(tup)])
+        cuts += 1
+    if cand is None:
+        print(f"it{it}: F={nf} no loop-free repair after {cuts} cuts (skip)", flush=True)
+        stuck += 1
         continue
-    got = sum(int(sv.Value(place[i])) for i in range(nf))
+    got = sum(1 for s_ in Fl if s_ in cand)
     new_score = len(fixed) + got
     if new_score >= cur_score:
-        # adopt: repair maximizes over F so it never drops below cur_score;
-        # == is a plateau reshuffle (diversification).
-        for s in Fl:
-            cur.pop(s, None)
-        for i, s in enumerate(Fl):
-            if sv.Value(place[i]):
-                cur[s] = (avail[sv.Value(tv[i])], sv.Value(rv[i]))
+        cur.clear(); cur.update(cand)
         cur_score = new_score
         if new_score > best_score:
             best_score = new_score

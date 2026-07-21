@@ -45,6 +45,17 @@ degrade-reclimb restarts without improvement.</p>
 <h3>physical verification view (tile numbers + colours)</h3>
 <object data="record_B_208_verify.svg" type="image/svg+xml"></object>
 
+<h2>Category C, most tiles with zero mismatches AND zero closed sub-loops: 135/160</h2>
+<p>The strictest and most meaningful metric: a board that is perfectly matched
+<i>and</i> contains no closed gold sub-loop, so it is still a valid prefix of a
+real solution. Categories A and B both contain 9 closed sub-loops, which makes
+them structural dead ends however high they score. This board was obtained by
+breaking every loop in the Category-A board (7 tiles removed) and is the
+current best; the previous loop-feasible best was about 93 tiles.</p>
+<h3>gold-line view</h3><object data="record_C_loopfree.svg" type="image/svg+xml"></object>
+<h3>physical verification view</h3>
+<object data="record_C_loopfree_verify.svg" type="image/svg+xml"></object>
+
 <p>How everything works: <b>SOLVERS.md</b>. What failed and why:
 <b>NEGATIVE_RESULTS.md</b>. Re-score any board with
 <code>python score_board.py &lt;board.txt&gt;</code>.</p>
