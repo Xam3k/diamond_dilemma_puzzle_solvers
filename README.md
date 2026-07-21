@@ -137,7 +137,7 @@ line is verified to correspond exactly to an encoded data bit (checked for all
 ## Acknowledgments
 
 **[Jaap Scherphuis](http://www.jaapsch.net/puzzles/diamdil.htm)** made this
-project possible. The gold tile data (which Jaap kindly sent directly), the
+project possible. The gold tile data, the
 puzzle's history, and the published silver/red/blue solutions I validated the
 whole pipeline against all come from his Diamond Dilemma page. Please also go
 explore [the rest of his puzzle site](https://www.jaapsch.net/puzzles/), it is
