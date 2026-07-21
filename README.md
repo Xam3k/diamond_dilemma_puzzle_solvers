@@ -8,6 +8,24 @@ to my knowledge **never solved by anyone**. It still isn't. This repository
 documents how far I got, how, and everything that didn't work, so the next
 attempt can start where I stopped.
 
+## Start here
+
+The repository is flat on purpose: the solvers read their data files from the
+working directory, so everything runs with no setup. If the file list looks
+long, these are the only entries most visitors need:
+
+| Want to... | Open |
+|---|---|
+| see the results | `records_view.html` (both record boards, annotated) |
+| check the tile data against Jaap's sheets | `tiles_view.html` (all 160 tiles) |
+| understand how the solvers work | [SOLVERS.md](SOLVERS.md) |
+| see what failed and why | [NEGATIVE_RESULTS.md](NEGATIVE_RESULTS.md) |
+| verify a record yourself | `python score_board.py rr_best.txt` |
+
+Two folders hold supporting material: `validation/` (the solved silver / red /
+blue challenges that reproduce Jaap's published counts, plus planted test
+instances) and `archive/` (spent run artifacts, kept for provenance).
+
 ## Results
 
 | Category | Best known | File | Visualization |
