@@ -1,6 +1,6 @@
 # Diamond Dilemma: What I Tried That Didn't Work (and How I Decided)
 
-*Companion to `SOLVERS.md`. Every abandoned approach, the measurement or
+*Companion to [`SOLVERS.md`](SOLVERS.md). Every abandoned approach, the measurement or
 argument that killed it, and a note on whether the
 rejection is airtight or could be overturned by a successor with more compute,
 a better implementation, or a new idea. Read this before re-trying anything.*
@@ -22,7 +22,7 @@ rejection is only as good as its measurement:
    compare *exact* node counts. A value-ordering change must keep the count
    identical (reorder-invariance = correctness); a pruning change must reduce
    it without losing solutions. Used for: rigidity, RARITY2, NEIGHBOR_FC.
-3. **Nodes/score-to-target on planted instances**, `gen_loop_synthetic.py`
+3. **Nodes/score-to-target on planted instances**, [`gen_loop_synthetic.py`](gen_loop_synthetic.py)
    creates instances with a known single-loop solution; compare how fast
    variants approach it. Caveat discovered late: **max-depth-reached is a
    misleading metric** (see §6.1).
@@ -33,7 +33,7 @@ rejection is only as good as its measurement:
    (`ESTIMATE` mode), validated against an exact truncated count (4% error)
    before being trusted for the go/no-go on exhaustion.
 6. **Independent re-scoring**, every record claim re-verified by
-   `score_board.py`, which shares no code with any solver.
+   [`score_board.py`](score_board.py), which shares no code with any solver.
 7. **Witness arguments**, where possible, soundness proven rather than
    tested (e.g. forward checking: any completable state supplies a viable
    candidate for every empty slot, so the prune can never fire on a viable
@@ -43,7 +43,7 @@ rejection is only as good as its measurement:
 
 ## 1. Whole solver families that failed (goal: find the full gold solution)
 
-### 1.1 CNF / CDCL SAT (`sat_solver.py`, `run_sat.py`)
+### 1.1 CNF / CDCL SAT ([`sat_solver.py`](sat_solver.py), [`run_sat.py`](run_sat.py))
 - **Result:** correct but unusably slow ~127 conflicts/second.
 - **Why (diagnosis):** my encoding, not necessarily SAT itself; the model was
   large and propagation-weak.
@@ -52,7 +52,7 @@ rejection is only as good as its measurement:
   A successor should try: direct pattern-variable encoding, incremental
   assumptions per symmetry unit.
 
-### 1.2 CP-SAT satisfaction on the full instance (`cp_solver.py`)
+### 1.2 CP-SAT satisfaction on the full instance ([`cp_solver.py`](cp_solver.py))
 - **Result:** UNKNOWN after 1,955 s deterministic-time (8 workers); a later
   48 h / 2-worker attempt was killed by a reboot at 27.4 h having fixed only
   ~60 of 116,797 variables, extrapolated time to verdict: years.
@@ -61,34 +61,34 @@ rejection is only as good as its measurement:
   probably satisfiable (§5.3), making an UNSAT proof attempt moot and a SAT
   find astronomically lucky.
 
-### 1.3 Frontier backtracker (`frontier_solver.py`)
+### 1.3 Frontier backtracker ([`frontier_solver.py`](frontier_solver.py))
 - **Result:** validated on 0-blank synthetics; crawls on real gold, blank
   edges give ~138-way branching at the frontier.
 - **Still holds?** Yes for the frontier-first ordering itself; superseded by
   the MRV fill-order of `solver2/3` which measures far better.
 
-### 1.4 Min-conflicts / simulated annealing (`solver_mc.c`)
+### 1.4 Min-conflicts / simulated annealing ([`solver_mc.c`](solver_mc.c))
 - **Result:** ~5M moves/s, never solved even the *easy* 0-blank synthetic
   (best ~25–50 mismatched edges of 240).
 - **Diagnosis:** the permutation constraint means a single swap usually breaks
   more edges than it fixes → greedy stalls, hot search random-walks.
 - **Still holds?** Yes for single-move local search, re-confirmed twice more
   (tabu §4.1, and the B-metric tabu plateau §4.3). Large-neighbourhood moves
-  are the fix (that's `rr_edges.py`).
+  are the fix (that's [`rr_edges.py`](rr_edges.py)).
 
-### 1.5 Parallel tempering (`ptemper.c`)
+### 1.5 Parallel tempering ([`ptemper.c`](ptemper.c))
 - **Result:** cold replica drifts away from the warm-start basin; never beat
   136 (the then-record).
 - **Still holds?** Probably; same single-move pathology as §1.4.
 
-### 1.6 Max-clique / add-only branch & bound (`clique_solver.c`)
+### 1.6 Max-clique / add-only branch & bound ([`clique_solver.c`](clique_solver.c))
 - **Result:** cold = 97/160 at ~5k nodes/s; warm-started from 136 it is
   *structurally stuck* an add-only method cannot remove-and-rearrange the
   dead holes.
 - **Still holds?** Yes, the 18-dead-holes analysis (§4.2) proves rearrangement
   is required, which add-only B&B cannot do by definition.
 
-### 1.7 Belief / survey propagation (`bp_solver.py`)
+### 1.7 Belief / survey propagation ([`bp_solver.py`](bp_solver.py))
 - **Result:** loopy BP never converges on gold (iterations pinned at max
   across damping 0.9 / field 0.3 sweeps); on a *satisfiable* synthetic reaches
   only 4/160 (default) to 18/160 (tuned).
@@ -161,7 +161,7 @@ rejection is only as good as its measurement:
 ### 3.2 Shallow refutation (enumerate depth-k frontier, CP-SAT each subtree)
 - **Hypothesis:** CP-SAT kills subtrees in 0.1 s from depth 12+; enumerate a
   shallow frontier and refute everything.
-- **Measurement:** `refute_pilot.py` ran the actual cascade on unit 14's exact
+- **Measurement:** [`refute_pilot.py`](refute_pilot.py) ran the actual cascade on unit 14's exact
   frontier, generation by generation: kill rates *oscillate* with depth
   (21.5% @8, 66% @10, 89% @12, 78% @14, 34% @16, 98% @18 at 3 s budget) and
   timeout-branching products explode exactly at the "face-opening" depths
@@ -206,7 +206,7 @@ rejection is only as good as its measurement:
   max-placement.
 
 ### 4.2 Everything that tried to beat 142
-The 142 board's structure (verified by `analyze_partial.py`): 18 isolated
+The 142 board's structure (verified by [`analyze_partial.py`](analyze_partial.py)): 18 isolated
 holes, each fully surrounded, **zero free tiles fit any hole** ("all dead"),
 17/18 in the bottom pyramid. Attempts, in order:
 - **Focused bottom-pyramid repair + path relinking** (RR_FOCUS/RR_GUIDE,
@@ -244,7 +244,7 @@ holes, each fully surrounded, **zero free tiles fit any hole** ("all dead"),
 ### 5.2 Single-move tabu as the engine
 - Warm tabu improved 186→190 in 116 iterations (<1 s) then froze for 180 s.
   Instantaneous plateau + huge iteration throughput = move-set limitation,
-  not landscape limit, proven by `rr_edges.py` immediately climbing
+  not landscape limit, proven by [`rr_edges.py`](rr_edges.py) immediately climbing
   190→198→…→208 from the same start.
 
 ### 5.3 At the 208 frontier (current, still being probed)
@@ -320,7 +320,7 @@ value. Fair game for successors:
    one discovery that would revive shallow refutation, which remains the only
    known path to full exhaustion below 10¹⁶ nodes.
 7. **Cloud-scale basin portfolio for Category B**, dozens of parallel
-   `rr_edges.py` lineages + periodic relinking. The local evidence (each
+   [`rr_edges.py`](rr_edges.py) lineages + periodic relinking. The local evidence (each
    basin plateaus individually; fresh basins climb fast) neither proves nor
    refutes that breadth beats depth here; it is the natural next experiment
    if the project continues.

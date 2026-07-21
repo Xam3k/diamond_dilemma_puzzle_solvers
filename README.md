@@ -16,25 +16,25 @@ long, these are the only entries most visitors need:
 
 | Want to... | Open |
 |---|---|
-| see the results | `records_view.html` (both record boards, annotated) |
-| check the tile data against Jaap's sheets | `tiles_view.html` (all 160 tiles) |
+| see the results | [`records_view.html`](records_view.html) (both record boards, annotated) |
+| check the tile data against Jaap's sheets | [`tiles_view.html`](tiles_view.html) (all 160 tiles) |
 | understand how the solvers work | [SOLVERS.md](SOLVERS.md) |
 | see what failed and why | [NEGATIVE_RESULTS.md](NEGATIVE_RESULTS.md) |
 | verify a record yourself | `python score_board.py rr_best.txt` |
 
-Two folders hold supporting material: `validation/` (the solved silver / red /
+Two folders hold supporting material: [`validation/`](validation) (the solved silver / red /
 blue challenges that reproduce Jaap's published counts, plus planted test
-instances) and `archive/` (spent run artifacts, kept for provenance).
+instances) and [`archive/`](archive) (spent run artifacts, kept for provenance).
 
 ## Results
 
 | Category | Best known | File | Visualization |
 |---|---|---|---|
-| **A**, most tiles placed with *every* touching edge matched | **142 / 160** (186/240 edges, zero mismatches) | `rr_best.txt` | `record_A_142.svg` |
-| **B**, most matched edges with *all 160* tiles placed (Eternity-II-style score) | **208 / 240** | `edges_208_checkpoint.txt` | `record_B_208.svg` |
+| **A**, most tiles placed with *every* touching edge matched | **142 / 160** (186/240 edges, zero mismatches) | [`rr_best.txt`](rr_best.txt) | [`record_A_142.svg`](record_A_142.svg) |
+| **B**, most matched edges with *all 160* tiles placed (Eternity-II-style score) | **208 / 240** | [`edges_208_checkpoint.txt`](edges_208_checkpoint.txt) | [`record_B_208.svg`](record_B_208.svg) |
 | Full gold solution (160 tiles + single loop) | **open** | n/a | n/a |
 
-Open `records_view.html` for both boards with commentary. Every score is
+Open [`records_view.html`](records_view.html) for both boards with commentary. Every score is
 re-verifiable in one command: `python score_board.py <board.txt>`.
 
 Supporting measurements worth knowing before you start:
@@ -62,10 +62,10 @@ solutions and corrected after human re-verification of the physical tiles.
 ## The two documents to read
 
 - **[SOLVERS.md](SOLVERS.md)**, code-level tour of every solver: the
-  exhaustive DFS engine (`solver3.c`) with its seven pruning layers, CP-SAT
+  exhaustive DFS engine ([`solver3.c`](solver3.c)) with its seven pruning layers, CP-SAT
   oracle sidecar, crash-resilient work decomposition, and tree-size
-  estimator; and the high-score optimizers (`ruin_recreate.py`,
-  `rr_edges.py`, `tabu_solver.c`, `cp_maxsat.py`).
+  estimator; and the high-score optimizers ([`ruin_recreate.py`](ruin_recreate.py),
+  [`rr_edges.py`](rr_edges.py), [`tabu_solver.c`](tabu_solver.c), [`cp_maxsat.py`](cp_maxsat.py)).
 - **[NEGATIVE_RESULTS.md](NEGATIVE_RESULTS.md)**, everything I tried that
   failed, the exact measurement that killed each idea, whether the rejection
   still holds, and the shelf of untried ideas. **Read this before re-trying
@@ -104,21 +104,21 @@ challenge solvers, which use exactly these ranges, reproduce Jaap's published
 counts). Each tile carries two independent line sets:
 
 - **Gold lines** (the gold challenge, all 160 tiles): raw data in
-  `diamonddilemma.txt` (Jaap's own values, provided by him), parsed into
-  `tiles.json`; within-tile gold wiring in `arcs.json` / `arcs_flat.txt`.
-- **White lines** (the silver / red / blue challenges): `whites.txt`, with
-  within-tile wiring in `white_arcs.json`.
+  [`diamonddilemma.txt`](diamonddilemma.txt) (Jaap's own values, provided by him), parsed into
+  [`tiles.json`](tiles.json); within-tile gold wiring in [`arcs.json`](arcs.json) / [`arcs_flat.txt`](arcs_flat.txt).
+- **White lines** (the silver / red / blue challenges): [`whites.txt`](whites.txt), with
+  within-tile wiring in [`white_arcs.json`](white_arcs.json).
 
 Both are 11 bits per tile-edge (a `1` where a line meets the edge), three
 edges per tile, listed clockwise from the bottom-right edge. The
 `verify_*.txt` files are the human verification sheets used to check every
-tile by eye. `render_records.py` produces a physical-colour, tile-numbered
-view (`records_view.html`) so anyone holding the puzzle can reconstruct a
+tile by eye. [`render_records.py`](render_records.py) produces a physical-colour, tile-numbered
+view ([`records_view.html`](records_view.html)) so anyone holding the puzzle can reconstruct a
 board by hand.
 
-For a direct integrity check, `render_tiles_sheet.py` draws **all 160 tiles in
+For a direct integrity check, [`render_tiles_sheet.py`](render_tiles_sheet.py) draws **all 160 tiles in
 Jaap's exact sheet order** (8 per row, silver then red then blue) as
-`tiles_view.html`, one image for the gold lines and one for the white lines.
+[`tiles_view.html`](tiles_view.html), one image for the gold lines and one for the white lines.
 Place it next to Jaap's original sheets and compare tile by tile. Every drawn
 line is verified to correspond exactly to an encoded data bit (checked for all
 160 tiles, both colours).
@@ -127,12 +127,12 @@ line is verified to correspond exactly to an encoded data bit (checked for all
 
 | | |
 |---|---|
-| Data (verified) | `diamonddilemma.txt` (gold, Jaap's), `tiles.json`, `geometry.json`, `arcs.json`/`arcs_flat.txt`, `whites.txt`, `white_arcs.json`, `verify_*.txt` (human verification sheets) |
-| Exhaustive engine | `solver3.c`, `oracle_sidecar.py`, `run_hybrid.py`, `frontier_ledger.py`, `ledger_run.py` |
-| High-score solvers | `rr_edges.py` (B champion), `ruin_recreate.py` (A champion), `tabu_solver.c`, `cp_maxsat.py`, `kick_cycle.sh` |
-| Verification & analysis | `score_board.py`, `analyze_partial.py`, `check_verified.py`, `check_white_full.py`, `loop_trace.py`, white-challenge solvers `cp_white_*.py`, min-edit fitters `*_edit.py` |
-| Visualization | `gen_viz.py`, `render_records.py`, `records_view.html`, `render_tiles_sheet.py`, `tiles_view.html` (all-160 tile catalog), `solutions_view.html` (silver/red/blue gallery) |
-| Records & artifacts | `rr_best.txt`, `edges_208_checkpoint.txt`, `est_result.txt` (tree-size estimate), `frontier_ledger.txt` (banked exhaustive coverage) |
+| Data (verified) | [`diamonddilemma.txt`](diamonddilemma.txt) (gold, Jaap's), [`tiles.json`](tiles.json), [`geometry.json`](geometry.json), [`arcs.json`](arcs.json)/[`arcs_flat.txt`](arcs_flat.txt), [`whites.txt`](whites.txt), [`white_arcs.json`](white_arcs.json), `verify_*.txt` (human verification sheets) |
+| Exhaustive engine | [`solver3.c`](solver3.c), [`oracle_sidecar.py`](oracle_sidecar.py), [`run_hybrid.py`](run_hybrid.py), [`frontier_ledger.py`](frontier_ledger.py), [`ledger_run.py`](ledger_run.py) |
+| High-score solvers | [`rr_edges.py`](rr_edges.py) (B champion), [`ruin_recreate.py`](ruin_recreate.py) (A champion), [`tabu_solver.c`](tabu_solver.c), [`cp_maxsat.py`](cp_maxsat.py), [`kick_cycle.sh`](kick_cycle.sh) |
+| Verification & analysis | [`score_board.py`](score_board.py), [`analyze_partial.py`](analyze_partial.py), [`check_verified.py`](check_verified.py), [`check_white_full.py`](check_white_full.py), [`loop_trace.py`](loop_trace.py), white-challenge solvers `cp_white_*.py`, min-edit fitters `*_edit.py` |
+| Visualization | [`gen_viz.py`](gen_viz.py), [`render_records.py`](render_records.py), [`records_view.html`](records_view.html), [`render_tiles_sheet.py`](render_tiles_sheet.py), [`tiles_view.html`](tiles_view.html) (all-160 tile catalog), [`solutions_view.html`](solutions_view.html) (silver/red/blue gallery) |
+| Records & artifacts | [`rr_best.txt`](rr_best.txt), [`edges_208_checkpoint.txt`](edges_208_checkpoint.txt), [`est_result.txt`](est_result.txt) (tree-size estimate), [`frontier_ledger.txt`](frontier_ledger.txt) (banked exhaustive coverage) |
 
 ## Acknowledgments
 

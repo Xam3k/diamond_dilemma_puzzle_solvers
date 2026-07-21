@@ -12,7 +12,7 @@ Everything below rests on the same data model.
 
 **The board** is a pentagonal bipyramid: 10 triangular faces × 16 triangular
 slots = **160 slots**, connected by **240 internal edges** (each edge joins two
-slots). `geometry.py` derives this and writes `geometry.json`, whose `edges`
+slots). [`geometry.py`](geometry.py) derives this and writes [`geometry.json`](geometry.json), whose `edges`
 list holds entries `{slotA, edgeA, slotB, edgeB}` meaning: slot A's local edge
 `edgeA` (0/1/2) touches slot B's local edge `edgeB`. Every solver loads this
 adjacency.
@@ -20,31 +20,31 @@ adjacency.
 **The tiles**: 160 triangles, each with a gold-line pattern on its 3 edges.
 A pattern is an 11-character bitstring, the 11 interior points of an edge
 (at fractions (p+1)/12 along the edge), bit=1 where a gold line ends at that
-point. Tile data originates from Jaap's `diamonddilemma.txt` (gold, verified
-perfect) and is loaded as `tiles.json` (`tiles[t][e]` = pattern string of tile
+point. Tile data originates from Jaap's [`diamonddilemma.txt`](diamonddilemma.txt) (gold, verified
+perfect) and is loaded as [`tiles.json`](tiles.json) (`tiles[t][e]` = pattern string of tile
 t, edge e).
 
 **The matching rule**: a tile placed with rotation `r` presents its pattern
 `tiles[t][(j+r) % 3]` on slot-edge `j`. Two facing tiles match iff their
 patterns are **mutual reversals**: `pat_A == reverse(pat_B)` (the same physical
 points seen from opposite sides). This convention is implemented independently
-in at least three places that cross-validate each other: `solver3.c`
-(`rev_dense[]`, built in `build_dense_ids()` ~line 1075), `ruin_recreate.py`
-(`rev = lambda p: p[::-1]`), and `score_board.py`.
+in at least three places that cross-validate each other: [`solver3.c`](solver3.c)
+(`rev_dense[]`, built in `build_dense_ids()` ~line 1075), [`ruin_recreate.py`](ruin_recreate.py)
+(`rev = lambda p: p[::-1]`), and [`score_board.py`](score_board.py).
 
 **The single-loop rule** (gold challenge only): a full solution needs all 240
 edges matched AND the gold lines forming **exactly one closed loop**. The
-within-tile wiring (which endpoint connects to which) is `arcs.json` /
-`arcs_flat.txt`, 365 arcs, human-verified. Whether a set of placed tiles
+within-tile wiring (which endpoint connects to which) is [`arcs.json`](arcs.json) /
+[`arcs_flat.txt`](arcs_flat.txt), 365 arcs, human-verified. Whether a set of placed tiles
 closes loops is decided by union-find over arc endpoints (see §1.4).
 
 **The two score categories** (high-score work):
-- **Category A**: max tiles placed with *zero* mismatched edges. Record: **142/160** (`rr_best.txt`).
-- **Category B**: max matched edges with *all 160* tiles placed, mismatches allowed (Eternity-II-style). Record: **208/240** (`edges_best.txt` / `edges_208_checkpoint.txt`).
+- **Category A**: max tiles placed with *zero* mismatched edges. Record: **142/160** ([`rr_best.txt`](rr_best.txt)).
+- **Category B**: max matched edges with *all 160* tiles placed, mismatches allowed (Eternity-II-style). Record: **208/240** (`edges_best.txt` / [`edges_208_checkpoint.txt`](edges_208_checkpoint.txt)).
 
 ---
 
-## 1. `solver3.c`: the exhaustive DFS engine ("find the solution or prove none")
+## 1. [`solver3.c`](solver3.c): the exhaustive DFS engine ("find the solution or prove none")
 
 *~2,700 lines of C. Compiled variants: `solver3.exe` (production),
 `solver3_sub.exe` (with batch modes), `solver3_est.exe`, `solver3_bench.exe`,
@@ -109,7 +109,7 @@ magnitude (Knuth estimate, §1.8): 3.8×10¹¹ (unit 14) to ~10¹⁶ (unit 4);
 total T ≈ 3×10¹⁶ → full exhaustion needs ~50+ core-years → **infeasible**;
 the sweep is paused with 4,667 sub-batches permanently banked.
 
-### 1.6 The CP-SAT oracle sidecar (`oracle_sidecar.py` + hooks in solver3.c)
+### 1.6 The CP-SAT oracle sidecar ([`oracle_sidecar.py`](oracle_sidecar.py) + hooks in solver3.c)
 
 My own "endgame oracle" idea, validated at 60:1 payoff. When a subtree
 consumes ≥ `ORACLE_MIN` (4M) nodes without resolving (`maybe_ask_oracle()`,
@@ -118,14 +118,14 @@ prefix to `ORACLE_DIR/req_<seq>.txt` in the format
 `d <depth> n <nodes> B slot:tile:rot …` (`oracle_roundtrip()`, ~600) and polls
 for `ans_<seq>.txt`.
 
-`oracle_sidecar.py` (persistent Python process): `scan_pending()` (line 62)
+[`oracle_sidecar.py`](oracle_sidecar.py) (persistent Python process): `scan_pending()` (line 62)
 finds unanswered requests; for each it builds a CP-SAT **completion model**,
 can the remaining tiles legally fill the remaining slots? (matching only; the
 loop rule is *not* encoded). Verdicts:
 - **INFEASIBLE** (the norm: 100% of ~75k calls to date, median ~0.1–0.4 s) → solver hard-prunes the entire subtree (`g_prune_below` mechanism in dfs()).
 - **FEASIBLE** → `write_completion_and_check()` (line 109) loop-checks the found completion; a single loop would be written as `GOLD_SOLUTION.txt` (never happened).
 
-`run_hybrid.py` wires one solver + one sidecar together (cleans the oracle
+[`run_hybrid.py`](run_hybrid.py) wires one solver + one sidecar together (cleans the oracle
 dir, starts sidecar, starts solver with env, relays logs, tears down; env
 passthrough for `ROOT_UNIT`/`TIME_LIMIT`/`SOLVER_BIN`, per-unit
 `ORACLE_DIR` for parallel safety).
@@ -137,10 +137,10 @@ Three solver3 modes, composable via env:
 - **`PREFIX_FILE`** (`run_prefix_file()`, ~2337): re-root the search at each prefix listed in a file, rebuilds the fill order for the prefix's seed, places the prefix with full bookkeeping, then dfs()'s its subtree. With `PREFIX_START`/`PREFIX_COUNT` it processes only a slice; prints `PREFIX_BATCH EXHAUSTED start=… count=… sols=… deferred=…`.
 - **`PREFIX_NODE_CAP` + `DEFER_FILE`**: a prefix whose subtree exceeds the node budget is *abandoned* (not stalled) and appended to the defer file for deeper decomposition.
 
-**`frontier_ledger.py`** (the adaptive driver) orchestrates these: decompose
+**[`frontier_ledger.py`](frontier_ledger.py)** (the adaptive driver) orchestrates these: decompose
 each unit into depth-K0 prefixes (`ensure_root_frontier()`, line 61), process
 fixed-size batches across N workers (`launch()`/`reap()`, lines 153/170), bank
-every completed batch in `frontier_ledger.txt` (atomic append+fsync, `bank()`,
+every completed batch in [`frontier_ledger.txt`](frontier_ledger.txt) (atomic append+fsync, `bank()`,
 line 147), and **recursively decompose deferred monsters** DELTA levels deeper
 (`decompose()`, line 73), enqueueing the children. On restart it walks the
 persisted child-pointers and resumes exactly (survived a reboot with zero
@@ -165,7 +165,7 @@ can dominate; treat per-unit numbers as order-of-magnitude.
 
 ## 2. High-score solvers (Category A: perfect partial)
 
-### 2.1 `cp_maxsat.py`: CP-SAT max-placement (baseline; produced 132)
+### 2.1 [`cp_maxsat.py`](cp_maxsat.py): CP-SAT max-placement (baseline; produced 132)
 
 One global CP-SAT model (docstring, lines 1–15): booleans `place[s]`;
 `tile_of[s]`/`rot[s]`; per-edge *effective patterns* `epat[s][j]` that take a
@@ -177,7 +177,7 @@ enumeration-completeness requires `num_search_workers=1` (multi-worker CP-SAT
 silently drops solutions, a bug I caught during the silver/red/blue
 validation).
 
-### 2.2 `ruin_recreate.py`: LNS matheuristic (champion; produced 142)
+### 2.2 [`ruin_recreate.py`](ruin_recreate.py): LNS matheuristic (champion; produced 142)
 
 The record-holder for Category A. Loop (main body, ~line 96 on):
 1. **RUIN**, `neighborhood()` (line 76) frees a slot set F: all current holes + a BFS ring around random centers; variants: `RR_BIG` (free 1–2 whole faces), `RR_FOCUS` (restrict big ruins to the bottleneck faces), `RR_GUIDE` (path relinking: center ruins where the incumbent disagrees with a guide partial, the cross-basin trick that produced the historic 138), `RR_ALLHOLES` (free *every* hole + N-ring at once).
@@ -186,11 +186,11 @@ The record-holder for Category A. Loop (main body, ~line 96 on):
 4. **ILS kicks** (`RR_KICK…`, added 2026-07-16): after N non-improving repairs, deliberately evict hole-adjacent "wall" tiles and re-climb (the `best` snapshot is protected).
 
 Measured verdict: 142 is a *deep* local maximum, all 18 holes "dead" (zero
-free tiles fit; `analyze_partial.py` verifies this), and it survived 120 kicks
+free tiles fit; [`analyze_partial.py`](analyze_partial.py) verifies this), and it survived 120 kicks
 and a coordinated 102-slot all-holes re-solve. 142 is very likely the true
 Category-A maximum (unproven).
 
-### 2.3 `analyze_partial.py`: diagnosis tool
+### 2.3 [`analyze_partial.py`](analyze_partial.py): diagnosis tool
 
 Given instance + partial: hole locations/components, placed-neighbour counts,
 per-hole fitting-(tile,rot) counts (the "dead holes" finding), face
@@ -200,7 +200,7 @@ distribution (17/18 holes bottom-pyramid).
 
 ## 3. High-score solvers (Category B: E2-style matched edges, full board)
 
-### 3.1 `tabu_solver.c`: single-move tabu search (baseline; ceiling ~190 warm)
+### 3.1 [`tabu_solver.c`](tabu_solver.c): single-move tabu search (baseline; ceiling ~190 warm)
 
 Full 160-tile assignment always; cost = # mismatched board edges (0 = solved).
 Moves: swap two tiles (with re-rotation) or rotate one tile in place; fully
@@ -213,7 +213,7 @@ within ~100 s (cold: cost 91; warm from the 142 board: cost 50 = 190 matched
 after 116 iterations, then frozen). The move set is too local, this
 motivated the LNS below.
 
-### 3.2 `rr_edges.py`: CP-SAT large-neighbourhood edge maximiser (champion; 208/240)
+### 3.2 [`rr_edges.py`](rr_edges.py): CP-SAT large-neighbourhood edge maximiser (champion; 208/240)
 
 The Category-B record holder; structure mirrors ruin_recreate but on the
 mismatch objective with a **full board** (no place/not-place: a pure
@@ -244,9 +244,9 @@ and is currently being attacked by 64-slot/120-s repairs plus a kick-restart
 (8 random swaps down to 173, re-climbing). Pattern: cost of each +1 edge grows
 super-linearly, the E2 signature.
 
-### 3.3 `score_board.py`: independent verifier
+### 3.3 [`score_board.py`](score_board.py): independent verifier
 
-Scores any board file on both categories from `geometry.json` + `tiles.json`
+Scores any board file on both categories from [`geometry.json`](geometry.json) + [`tiles.json`](tiles.json)
 alone (shares no code with any solver); asserts no duplicate tiles; `--edges`
 lists each mismatch. Used to audit every record claim (all verified).
 
@@ -254,17 +254,17 @@ lists each mismatch. Used to audit every record claim (all verified).
 
 ## 4. Verification & data-integrity tools (the reason I trust the data)
 
-- `check_verified.py` / `check_white_full.py`, rebuild tiles from the
+- [`check_verified.py`](check_verified.py) / [`check_white_full.py`](check_white_full.py), rebuild tiles from the
   human-verification files; bits↔arcs consistency, odd-endpoint and
   arc-crossing checks.
-- `cp_white_challenge.py` / `cp_white_1w.py`, solve the silver/red/blue
+- [`cp_white_challenge.py`](cp_white_challenge.py) / [`cp_white_1w.py`](cp_white_1w.py), solve the silver/red/blue
   challenges (white lines). Outcome: **my counts exactly match Jaap's
   published 2/1/1**, the end-to-end proof that tile data + conventions +
   solver stack are correct.
-- `rhombus_edit.py` / `red_edit.py` / `blue_band_edit.py`, min-edit CP-SAT
+- [`rhombus_edit.py`](rhombus_edit.py) / [`red_edit.py`](red_edit.py) / [`blue_band_edit.py`](blue_band_edit.py), min-edit CP-SAT
   fitters that located ~15 single-position digitisation errors against known
   solutions.
-- `loop_trace.py`, `gen_loop_synthetic.py`, loop counting and planted
+- [`loop_trace.py`](loop_trace.py), [`gen_loop_synthetic.py`](gen_loop_synthetic.py), loop counting and planted
   single-loop instance generation (solver validation).
 
 ---
@@ -273,11 +273,11 @@ lists each mismatch. Used to audit every record claim (all verified).
 
 | Result | Value | Solver | File |
 |---|---|---|---|
-| Category A (perfect partial) | **142/160 tiles** (186/240 edges) | `ruin_recreate.py` (cross-basin seed) | `rr_best.txt` |
-| Category B (matched edges, full board) | **208/240** | `rr_edges.py` | `edges_best.txt`, checkpoint `edges_208_checkpoint.txt` |
-| Exhaustive coverage | 4,667 sub-batches banked; units 14/17/23 partial | `frontier_ledger.py` + `solver3_sub.exe` | `frontier_ledger.txt` |
-| Tree size (why exhaustion is off) | T ≈ 3×10¹⁶ nodes (~50+ core-years) | `ESTIMATE` mode | `est_result.txt` |
-| Pipeline validation | silver 2 / red 1 / blue 1 = Jaap exactly | `cp_white_1w.py` et al. | `solutions_view.html` |
+| Category A (perfect partial) | **142/160 tiles** (186/240 edges) | [`ruin_recreate.py`](ruin_recreate.py) (cross-basin seed) | [`rr_best.txt`](rr_best.txt) |
+| Category B (matched edges, full board) | **208/240** | [`rr_edges.py`](rr_edges.py) | `edges_best.txt`, checkpoint [`edges_208_checkpoint.txt`](edges_208_checkpoint.txt) |
+| Exhaustive coverage | 4,667 sub-batches banked; units 14/17/23 partial | [`frontier_ledger.py`](frontier_ledger.py) + `solver3_sub.exe` | [`frontier_ledger.txt`](frontier_ledger.txt) |
+| Tree size (why exhaustion is off) | T ≈ 3×10¹⁶ nodes (~50+ core-years) | `ESTIMATE` mode | [`est_result.txt`](est_result.txt) |
+| Pipeline validation | silver 2 / red 1 / blue 1 = Jaap exactly | [`cp_white_1w.py`](cp_white_1w.py) et al. | [`solutions_view.html`](solutions_view.html) |
 
 ---
 
