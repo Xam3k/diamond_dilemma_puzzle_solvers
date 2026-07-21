@@ -138,8 +138,8 @@ line is verified to correspond exactly to an encoded data bit (checked for all
 
 **[Jaap Scherphuis](http://www.jaapsch.net/puzzles/diamdil.htm)** made this
 project possible. The gold tile data, the
-puzzle's history, and the published silver/red/blue solutions I validated the
-whole pipeline against all come from his Diamond Dilemma page. Please also go
+puzzle's history, and the published silver/red/blue solutions (that I validated the
+whole pipeline against on the white puzzle) all come from his Diamond Dilemma page. Please also go
 explore [the rest of his puzzle site](https://www.jaapsch.net/puzzles/), it is
 a treasure. Thank you, Jaap.
 
