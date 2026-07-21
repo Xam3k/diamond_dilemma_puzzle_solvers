@@ -4,7 +4,7 @@ An attempt on the **gold challenge of the Diamond Dilemma** (Alan Fraser-Dackers
 G J Hayter Ltd, 1988): place 160 triangular tiles on a pentagonal bipyramid
 (10 faces × 16 slots, 240 internal edges) so that the gold lines crossing every
 edge match **and form one single closed loop**. A prize puzzle from 1988, 
-to my knowledge **never solved by anyone**. It still isn't. This repository
+to my knowledge **never solved by anyone**. This repository
 documents how far I got, how, and everything that didn't work, so the next
 attempt can start where I stopped.
 
