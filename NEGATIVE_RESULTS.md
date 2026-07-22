@@ -333,6 +333,15 @@ Implemented after noticing closed sub-loops in the record visualisations.
 - **Global CP-SAT + lazy cuts** ([`loopfree_maxsat.py`](loopfree_maxsat.py), target >=136): 25 minutes,
   status UNKNOWN, neither a board nor an infeasibility proof. Same wall the
   project always hit with global max-placement.
+- **135 is the OPTIMAL loop-free extraction of the 142 board** ([`make_loopfree.py`](make_loopfree.py)):
+  the exact minimum hitting set that breaks all 9 closed loops is 7 tiles (an
+  ILP over the loop slot-sets), so no better extraction of *that* board exists.
+- **Hunt over 2,765 different perfect boards** ([`hunt_loopfree.py`](hunt_loopfree.py)): a
+  ruin-and-recreate plateau walk that accepts on the loop-free extraction size
+  itself (not the matched-tile count), ruin centred on loop tiles, two seeds
+  x 25 min. Every one of ~2,765 differently-arranged perfectly-matched boards
+  extracted <= 135. Strong evidence 135 is at or very near the loop-feasible
+  maximum, though unproven.
 - **Still open:** is 136 reachable? Note the proof property: a cut only ever
   forbids an arrangement that provably contains a loop, so it can never remove
   a loop-free board. Any run that returns INFEASIBLE at a target therefore

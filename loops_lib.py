@@ -81,3 +81,56 @@ def closed_loop_slots(pl, arcs=None):
                 if key <= cs:
                     bad |= ss
     return bad
+
+
+def _loop_slotsets(pl, arcs=None):
+    """List of slot-sets, one per CLOSED loop."""
+    A = arcs if arcs is not None else _arcs
+    adj = defaultdict(list)
+    owner = defaultdict(set)
+    for s, (t, r) in pl.items():
+        for (a_, b_) in A[t]:
+            ends = []
+            for (e, p) in (a_, b_):
+                j = (e - r) % 3
+                i, is_a = _edge_of[(s, j)]
+                ends.append((i, p if is_a else 10 - p))
+            adj[ends[0]].append(ends[1])
+            adj[ends[1]].append(ends[0])
+            owner[frozenset(ends)].add(s)
+    seen, out = set(), []
+    for start in adj:
+        if start in seen:
+            continue
+        comp, stack = [], [start]
+        seen.add(start)
+        while stack:
+            nd = stack.pop()
+            comp.append(nd)
+            for m in adj[nd]:
+                if m not in seen:
+                    seen.add(m)
+                    stack.append(m)
+        if all(len(adj[nd]) == 2 for nd in comp):
+            cs = set(comp)
+            sl = set()
+            for k, ss in owner.items():
+                if k <= cs:
+                    sl |= ss
+            out.append(sl)
+    return out
+
+
+def loopfree_greedy(pl, arcs=None):
+    """Board minus a greedy hitting set that breaks every closed loop."""
+    pl = dict(pl)
+    while True:
+        loops = _loop_slotsets(pl, arcs)
+        if not loops:
+            return pl
+        cnt = defaultdict(int)
+        for L in loops:
+            for s in L:
+                cnt[s] += 1
+        victim = max(cnt, key=lambda s: (cnt[s], -s))
+        pl.pop(victim)
