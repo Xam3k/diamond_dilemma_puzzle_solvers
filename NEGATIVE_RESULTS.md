@@ -47,10 +47,21 @@ rejection is only as good as its measurement:
 - **Result:** correct but unusably slow ~127 conflicts/second.
 - **Why (diagnosis):** my encoding, not necessarily SAT itself; the model was
   large and propagation-weak.
-- **Still holds?** ⚠️ **Weak rejection.** A compact encoding run under a
-  modern solver (kissat) was explicitly proposed and never executed.
-  A successor should try: direct pattern-variable encoding, incremental
-  assumptions per symmetry unit.
+- **Update (compact CNF + Cadical, [`sat_perfect.py`](sat_perfect.py), 2026-07-22):** the
+  "never executed" gap is now closed. A leaner channelled encoding (per-slot
+  tile+rotation vars, pattern-channelled edge matching, no O(n^2) pairwise
+  clauses) run under Cadical (pysat). Validated CORRECT on known-satisfiable
+  sub-boards of the 142-tile record (40 slots -> SAT, 0 mismatches, 1 s; the
+  validation caught two phantom-pattern-variable soundness bugs before they
+  could produce a false result). But it **does not scale**: the
+  known-satisfiable 142-tile sub-board did not solve in 23+ minutes (40 slots
+  = 1 s -> 142 slots = intractable). The tile-permutation symmetry is hard for
+  CDCL; the full 160-tile question (SAT => a 240/240 board exists; UNSAT =>
+  the puzzle is unsolvable) is out of reach the same way CP-SAT's was (1.2).
+- **Still holds?** Yes, now more firmly. Modern CDCL with a clean, validated
+  encoding still cannot crack even a *satisfiable* 142-tile sub-problem. A
+  successor would need aggressive symmetry breaking plus a fundamentally
+  different formulation, not just a better solver.
 
 ### 1.2 CP-SAT satisfaction on the full instance ([`cp_solver.py`](cp_solver.py))
 - **Result:** UNKNOWN after 1,955 s deterministic-time (8 workers); a later
@@ -333,6 +344,12 @@ Implemented after noticing closed sub-loops in the record visualisations.
 - **Global CP-SAT + lazy cuts** ([`loopfree_maxsat.py`](loopfree_maxsat.py), target >=136): 25 minutes,
   status UNKNOWN, neither a board nor an infeasibility proof. Same wall the
   project always hit with global max-placement.
+- **Loop-aware exhaustive tracking ([`solver3.c`](solver3.c)) is VOID (2026-07-22).** solver3
+  already forbids early loop closure, so every board it visits is loop-feasible
+  and perfectly matched, which suggested tracking its best such board. But by
+  construction those boards are always *contiguous* prefixes of the fixed fill
+  order (max ~93), so it can never represent the 25-scattered-hole 135 board.
+  Rejected on inspection, without building.
 - **135 is the OPTIMAL loop-free extraction of the 142 board** ([`make_loopfree.py`](make_loopfree.py)):
   the exact minimum hitting set that breaks all 9 closed loops is 7 tiles (an
   ILP over the loop slot-sets), so no better extraction of *that* board exists.
